@@ -1,0 +1,193 @@
+/**
+ * Copyright(C) 2015-2025 杏仁科技
+ * All rights reserved
+ * ${date1} Created
+ */
+package ${packageName}.test.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.xingren.sdb.components.constants.CommonErrorCode;
+import com.xingren.sdb.components.exception.ServiceException;
+import com.xingren.sdb.components.result.BooleanResult;
+import com.xingren.sdb.components.result.DefaultResult;
+import ${packageName}.api.I${table.className}Service;
+import ${packageName}.api.constants.Trade.Status;
+import ${packageName}.api.dto.${table.className}DTO;
+import ${packageName}.dao.I${table.className}Dao;
+import ${packageName}.model.${table.className}DO;
+
+/**
+ * <pre>
+ * 测试 ${table.className}Service
+ * ${table.remark}
+ * 对应数据库表：${table.name}
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:sdb-spring.xml" })
+@Transactional
+public class Test${table.className}Service {
+
+    private static final Logger log = LoggerFactory.getLogger(Test${table.className}Service.class);
+
+    // @Spy
+    // @Autowired
+    @Mock
+    private I${table.className}Dao ${table.lowerClassName}Dao;
+
+    @InjectMocks
+    @Autowired
+    private I${table.className}Service ${table.lowerClassName}Service;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testUpdate() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        ${table.className}DTO dto = new ${table.className}DTO();
+        dto.${table.primaryKey.javaSetMethod}(id);
+        dto.setIfValid(1);
+
+        when(${table.lowerClassName}Dao.updateByPrimaryKeySelective(any(${table.className}DO.class))).thenReturn(1);
+
+        BooleanResult ret = ${table.lowerClassName}Service.updateByPrimaryKeySelective(dto);
+
+        assertTrue(ret.isSuccess());
+
+        // 验证调用参数
+        ArgumentCaptor<${table.className}DO> argument = ArgumentCaptor.forClass(${table.className}DO.class);
+
+        verify(${table.lowerClassName}Dao).updateByPrimaryKeySelective(argument.capture());
+
+        assertEquals(Integer.valueOf(1), argument.getValue().getIfValid());
+    }
+
+    @Test(expected = ServiceException.class)
+    public void testServiceException() {
+        // anyLong();
+        ${table.primaryKey.javaClassName} errId = ${table.primaryKey.testValue};
+        when(${table.lowerClassName}Dao.selectByPrimaryKey(errId)).thenThrow(new RuntimeException());
+        ${table.lowerClassName}Service.selectByPrimaryKey(errId);
+    }
+
+    @Test
+    public void testSelectByPrimaryKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        ${table.className}DO value = new ${table.className}DO();
+
+        value.${table.primaryKey.javaSetMethod}(id);
+
+        value.setIfValid(1);
+
+        when(${table.lowerClassName}Dao.selectByPrimaryKey(id)).thenReturn(value);
+
+        DefaultResult<${table.className}DTO> result = ${table.lowerClassName}Service.selectByPrimaryKey(id);
+
+        assertNotNull("不应该返回null", result);
+
+        ${table.className}DTO dto = result.getRealResult();
+
+        assertEquals(Integer.valueOf(1), dto.getIfValid());
+
+        verify(${table.lowerClassName}Dao, times(1)).selectByPrimaryKey(id);
+
+        // 测试不存在的
+
+        result = ${table.lowerClassName}Service.selectByPrimaryKey(99l);
+        assertNotNull("不应该返回null", result);
+
+        assertTrue(result.getErrorCodes().contains(CommonErrorCode.DB_NOT_FIND_RECORD));
+
+    }
+
+    @Test
+    @Ignore
+    public void testDeleteByPrimaryKey() {
+        Long id = 99999999L;
+        BooleanResult bRet = ${table.lowerClassName}Service.deleteByPrimaryKey(id);
+
+        if (bRet.isSuccess()) {
+            log.debug("删除成功");
+        } else {
+            log.debug("删除失败，错误代码：{}", bRet.getErrorCodes());
+        }
+    }
+
+    @Test
+    public void testSelectByHelpMessageIdAndOrderId() {
+        Long id = 1L;
+        Status status = Status.GENERATE;
+        ${table.className}DO value = new ${table.className}DO();
+
+        value.${table.primaryKey.javaSetMethod}(id);
+        value.setHelpMessageId(id);
+        value.setTradeOrderId(id);
+        value.setIfValid(1);
+
+        List<${table.className}DO> list = new ArrayList<${table.className}DO>();
+        list.add(value);
+
+        when(${table.lowerClassName}Dao.selectByHelpMessageIdAndStatus(id, status.getValue())).thenReturn(list);
+
+        DefaultResult<List<${table.className}DTO>> result = ${table.lowerClassName}Service.selectByHelpMessageIdAndStatus(id, status);
+
+        assertNotNull("不应该返回null", result);
+
+        List<${table.className}DTO> dto = result.getRealResult();
+        assertEquals(1, dto.size());
+        verify(${table.lowerClassName}Dao, times(1)).selectByHelpMessageIdAndStatus(id, status.getValue());
+
+        // 测试不存在的
+        result = ${table.lowerClassName}Service.selectByHelpMessageIdAndStatus(99l, status);
+        assertNotNull("不应该返回null", result);
+        assertTrue(result.getErrorCodes().contains(CommonErrorCode.DB_NOT_FIND_RECORD));
+
+        // 订单方法@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        when(${table.lowerClassName}Dao.selectByOrderIdAndStatus(id, status.getValue())).thenReturn(list);
+        result = ${table.lowerClassName}Service.selectByOrderIdAndStatus(id, status);
+
+        assertNotNull("不应该返回null", result);
+
+        dto = result.getRealResult();
+        assertEquals(1, dto.size());
+        verify(${table.lowerClassName}Dao, times(1)).selectByOrderIdAndStatus(id, status.getValue());
+
+        // 测试不存在的
+        result = ${table.lowerClassName}Service.selectByOrderIdAndStatus(99l, status);
+        assertNotNull("不应该返回null", result);
+        assertTrue(result.getErrorCodes().contains(CommonErrorCode.DB_NOT_FIND_RECORD));
+    }
+}

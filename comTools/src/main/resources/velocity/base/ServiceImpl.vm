@@ -1,0 +1,264 @@
+/**
+ * Copyright(C) 2015-2025 杏仁科技
+ * All rights reserved
+ * ${date1} Created
+ */
+package ${packageName}.service.impl;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.xingren.sdb.components.constants.CommonConstants.Valid;
+import com.xingren.sdb.components.constants.CommonErrorCode;
+import com.xingren.sdb.components.constants.SdbModule;
+import com.xingren.sdb.components.exception.ServiceException;
+import com.xingren.sdb.components.log.Logger;
+import com.xingren.sdb.components.result.BooleanResult;
+import com.xingren.sdb.components.result.DefaultResult;
+import com.xingren.sdb.components.utils.SpringBeanUtils;
+import ${packageName}.api.I${table.className}Service;
+import ${packageName}.api.dto.${table.className}DTO;
+import ${packageName}.dao.I${table.className}Dao;
+import ${packageName}.model.${table.className}DO;
+import ${packageName}.model.validate.GroupDefaultValue;
+
+/**
+ * <pre>
+ * ${table.remark} 服务实现
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@Service("${table.lowerClassName}Service")
+public class ${table.className}ServiceImpl implements I${table.className}Service {
+
+    @Autowired
+    private I${table.className}Dao ${table.lowerClassName}Dao;
+
+    @Autowired
+    private Validator validator;
+
+    @Override
+    public BooleanResult deleteByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        BooleanResult bRet = new BooleanResult();
+        try {
+            int ret = ${table.lowerClassName}Dao.deleteByPrimaryKey(${table.primaryKey.property});
+            if (ret < 1) {
+                bRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            }
+            return bRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据主键删除时发生异常", e, ${table.primaryKey.property});
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public DefaultResult<${table.primaryKey.javaClassName}> insert(${table.className}DTO dto) {
+        DefaultResult<${table.primaryKey.javaClassName}> dRet = new DefaultResult<${table.primaryKey.javaClassName}>();
+        ${table.className}DO baseDo = new ${table.className}DO();
+        try {
+            // DTO转DO
+            SpringBeanUtils.copyProperties(dto, baseDo);
+
+            // 验证 全部不能为空
+            Set<ConstraintViolation<${table.className}DO>> constraintViolation = validator.validate(baseDo, Default.class, GroupDefaultValue.class);
+            if (!constraintViolation.isEmpty()) {
+                for (ConstraintViolation<${table.className}DO> cv : constraintViolation) {
+                    dRet.addErrorMessage(CommonErrorCode.PARAMS_INVALID, cv.getPropertyPath() + " " + cv.getMessage());
+                }
+                return dRet;
+            }
+
+            int ret = ${table.lowerClassName}Dao.insert(baseDo);
+            if (ret < 1) {
+                dRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            } else {
+                dRet.setRealResult(baseDo.${table.primaryKey.javaGetMethod}());// 获取插入ID
+            }
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 插入时发生异常", e, dto);
+            throw new ServiceException(e);
+        }
+
+    }
+
+    @Override
+    public DefaultResult<${table.primaryKey.javaClassName}> insertSelective(${table.className}DTO dto) {
+        DefaultResult<${table.primaryKey.javaClassName}> dRet = new DefaultResult<${table.primaryKey.javaClassName}>();
+        ${table.className}DO baseDo = new ${table.className}DO();
+        try {
+            // DTO转DO
+            SpringBeanUtils.copyProperties(dto, baseDo);
+
+            // 验证 没有默认值的不能为空
+            Set<ConstraintViolation<${table.className}DO>> constraintViolation = validator.validate(baseDo);
+            if (!constraintViolation.isEmpty()) {
+                for (ConstraintViolation<${table.className}DO> cv : constraintViolation) {
+                    dRet.addErrorMessage(CommonErrorCode.PARAMS_INVALID, cv.getPropertyPath() + " " + cv.getMessage());
+                }
+                return dRet;
+            }
+
+            int ret = ${table.lowerClassName}Dao.insertSelective(baseDo);
+            if (ret < 1) {
+                dRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            } else {
+                dRet.setRealResult(baseDo.${table.primaryKey.javaGetMethod}());// 获取插入ID
+            }
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 选择性插入时发生异常", e, dto);
+            throw new ServiceException(e);
+        }
+
+    }
+
+    @Override
+    public DefaultResult<${table.className}DTO> selectByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        DefaultResult<${table.className}DTO> dRet = new DefaultResult<${table.className}DTO>();
+        ${table.className}DTO dto = new ${table.className}DTO();
+        try {
+            ${table.className}DO baseDo = ${table.lowerClassName}Dao.selectByPrimaryKey(${table.primaryKey.property});
+            if (baseDo == null) {
+                dRet.addErrorCode(CommonErrorCode.DB_NOT_FIND_RECORD);
+                return dRet;
+            }
+
+            SpringBeanUtils.copyProperties(baseDo, dto);
+            dRet.setRealResult(dto);
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据主键查询时发生异常", e, ${table.primaryKey.property});
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public BooleanResult updateByPrimaryKeySelective(${table.className}DTO dto) {
+        BooleanResult bRet = new BooleanResult();
+        ${table.className}DO baseDo = new ${table.className}DO();
+        try {
+            // DTO转DO
+            SpringBeanUtils.copyProperties(dto, baseDo);
+
+            int ret = ${table.lowerClassName}Dao.updateByPrimaryKeySelective(baseDo);
+            if (ret < 1) {
+                bRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            }
+            return bRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据主键选择性更新时发生异常", e, dto);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public BooleanResult updateByPrimaryKey(${table.className}DTO dto) {
+        BooleanResult bRet = new BooleanResult();
+        ${table.className}DO baseDo = new ${table.className}DO();
+        try {
+            // DTO转DO
+            SpringBeanUtils.copyProperties(dto, baseDo);
+
+            int ret = ${table.lowerClassName}Dao.updateByPrimaryKey(baseDo);
+            if (ret < 1) {
+                bRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            }
+            return bRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据主键更新时发生异常", e, dto);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public DefaultResult<List<${table.className}DTO>> selectBySelective(${table.className}DTO dto) {
+        DefaultResult<List<${table.className}DTO>> dRet = new DefaultResult<List<${table.className}DTO>>();
+
+        ${table.className}DO baseDo = new ${table.className}DO();
+        try {
+            // DTO转DO
+            SpringBeanUtils.copyProperties(dto, baseDo);
+            List<${table.className}DO> listDo = ${table.lowerClassName}Dao.selectBySelective(baseDo);
+
+            if (listDo == null) {
+                dRet.addErrorCode(CommonErrorCode.DB_NOT_FIND_RECORD);
+                return dRet;
+            }
+            // DO转DTO
+            List<${table.className}DTO> result = SpringBeanUtils.copyPropertiesForList(listDo, ${table.className}DTO.class);
+            dRet.setRealResult(result);
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 选择性查询时发生异常", e, dto);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public DefaultResult<List<${table.className}DTO>> selectByLanguage(String language) {
+        DefaultResult<List<${table.className}DTO>> dRet = new DefaultResult<List<${table.className}DTO>>();
+        try {
+            List<${table.className}DO> listDo = ${table.lowerClassName}Dao.selectByLanguage(language);
+
+            if (listDo == null) {
+                dRet.addErrorCode(CommonErrorCode.DB_NOT_FIND_RECORD);
+                return dRet;
+            }
+            // DO转DTO
+            List<${table.className}DTO> result = SpringBeanUtils.copyPropertiesForList(listDo, ${table.className}DTO.class);
+            dRet.setRealResult(result);
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据语言查询时发生异常", e, language);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public DefaultResult<List<${table.className}DTO>> selectByLangAndCode(String language, String code) {
+        DefaultResult<List<${table.className}DTO>> dRet = new DefaultResult<List<${table.className}DTO>>();
+        try {
+            List<${table.className}DO> listDo = ${table.lowerClassName}Dao.selectByLangAndCode(language, code);
+
+            if (listDo == null) {
+                dRet.addErrorCode(CommonErrorCode.DB_NOT_FIND_RECORD);
+                return dRet;
+            }
+            // DO转DTO
+            List<${table.className}DTO> result = SpringBeanUtils.copyPropertiesForList(listDo, ${table.className}DTO.class);
+            dRet.setRealResult(result);
+            return dRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据语言和代码查询时发生异常", e, language);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public BooleanResult changeValidByPKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}, Valid valid) {
+        BooleanResult bRet = new BooleanResult();
+        try {
+            int ret = ${table.lowerClassName}Dao.changeValidByPKey(${table.primaryKey.property}, valid.getValue());
+            if (ret < 1) {
+                bRet.addErrorCode(CommonErrorCode.DB_AFFECTED_ROWS_ZORE);
+            }
+            return bRet;
+        } catch (Exception e) {
+            Logger.exp(SdbModule.FOREST, "[${table.shortRemark}] 根据主键 启用/禁用 记录时发生异常", e, ${table.primaryKey.property});
+            throw new ServiceException(e);
+        }
+    }
+
+}

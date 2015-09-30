@@ -1,0 +1,86 @@
+/**
+ * Copyright(C) 2015-2025 杏仁科技
+ * All rights reserved
+ * ${date1} Created
+ */
+package ${_package};
+
+import java.util.List;
+
+import ${modulePackage}.model.${doName};
+
+/**
+ * <pre>
+ * 
+ * </pre>
+ *
+ * @author wwh
+ * @date ${date2}
+ *
+ */
+public interface ${className} {
+    /**
+     * 根据主键删除
+     * 
+     * @param ${idName}
+     * @return
+     */
+    int deleteByPrimaryKey(${idType} ${idName});
+
+    /**
+     * 插入
+     * 
+     * @param record
+     * @return
+     */
+    int insert(${doName} record);
+
+    /**
+     * 选择性插入
+     * 
+     * @param record
+     * @return
+     */
+    int insertSelective(${doName} record);
+
+    /**
+     * 根据主键查询
+     * 
+     * @param ${idName}
+     * @return
+     */
+    ${doName} selectByPrimaryKey(${idType} ${idName});
+
+    /**
+     * 根据主键选择性更新
+     * 
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(${doName} record);
+
+    /**
+     * 根据主键更新
+     * 
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKey(${doName} record);
+
+    /**
+     * 根据DO选择性查询
+     * 
+     * @param record
+     * @return
+     */
+    List<${doName}> selectBySelective(${doName} record);
+  
+    /**
+     * 根据主键 启用/禁用 记录
+     * 
+     * @param valid
+     * @return
+     */
+    int changeValidByPKey(${idType} ${idName}, int valid);
+
+}

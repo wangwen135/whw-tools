@@ -1,0 +1,75 @@
+﻿/**
+ * Copyright(C) 2015-2025 杏仁科技
+ * All rights reserved
+ * ${date1} Created
+ */
+package ${packageName}.queryobject;
+
+import com.xingren.sdb.components.common.AbstractQuery;
+
+/**
+ * <pre>
+ * ${table.remark} 查询对象
+ * 对应数据库表：${table.name}
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+public class ${table.className}Query extends AbstractQuery {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 状态
+     */
+    private Integer status;
+
+    /**
+     * 获取 userId
+     *
+     * @return the userId
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * 设置 userId
+     *
+     * @param userId
+     *            the userId to set
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 获取 status
+     *
+     * @return the status
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * 设置 status
+     *
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+}
