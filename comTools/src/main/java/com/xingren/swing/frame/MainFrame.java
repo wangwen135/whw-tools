@@ -42,6 +42,7 @@ import com.xingren.swing.feature.dbview.DatabaseViewIFrame;
 import com.xingren.swing.feature.digest.MD5IFrame;
 import com.xingren.swing.feature.digest.SHA1IFrame;
 import com.xingren.swing.feature.encrypt.AES128IFrame;
+import com.xingren.swing.feature.file.FileAppendIFrame;
 import com.xingren.swing.feature.generate.GenerateCodeIFrame;
 
 /**
@@ -247,6 +248,12 @@ public class MainFrame extends JFrame {
         mn_file.add(mntmReplace);
 
         JMenuItem mntmAppend = new JMenuItem("追加");
+        mntmAppend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addInternalFrame(new FileAppendIFrame());
+            }
+        });
         mn_file.add(mntmAppend);
 
         JMenu mnSocket = new JMenu("Socket");

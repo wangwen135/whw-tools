@@ -74,7 +74,7 @@ public class TableTableModel extends AbstractTableModel {
 
     // 表格中的列定义
     // 列名 类型 默认值 可为空 主键 唯一 注释
-    private static final String[] columns = new String[] { "序号", "列名", "类型", "默认值", "可为空", "主键", "唯一", "自增", "注释" };
+    private static final String[] columns = new String[] { "序号", "列名", "类型", "默认值", "可为空", "主键", "唯一", "自增", "注释", "对应属性名", "java类型" };
 
     public int getColumnCount() {
         return columns.length;
@@ -152,6 +152,10 @@ public class TableTableModel extends AbstractTableModel {
 
         case 8:
             return entity.getComments();
+        case 9:
+            return entity.getProperty();
+        case 10:
+            return entity.getJavaClassName();
 
         default:
             break;

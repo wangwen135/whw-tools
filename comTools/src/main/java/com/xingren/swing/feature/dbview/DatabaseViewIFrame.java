@@ -489,5 +489,8 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
     @Override
     protected void findInFrame() {
         JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "查找 ");
+        //查找--考虑一下看是否可以做出通用的？？
+        
+        //可以由一个统一的地方弹出查找窗口，然后返回一个查找对象，回调当前活动的窗口，具体动作由回调窗口决定
     }
 }

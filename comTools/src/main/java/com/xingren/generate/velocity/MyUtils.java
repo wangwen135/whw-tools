@@ -42,6 +42,38 @@ public class MyUtils {
         return false;
     }
 
+    /**
+     * 首字母大写
+     * 
+     * @param str
+     * @return
+     */
+    public String initialUpperCase(String str) {
+        if (str == null)
+            return null;
+        if (str.length() < 1)
+            return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    /**
+     * 截取字符串，从最后匹配的下一个位置
+     * 
+     * @param src
+     * @param match
+     * @return
+     */
+    public String substringLastIndex(String src, String match) {
+        if (src == null)
+            return null;
+        if (match == null)
+            return src;
+        int index = src.lastIndexOf(match);
+        if (index < 0)
+            return src;
+        return src.substring(index + 1);
+    }
+
     public boolean isNull(String str) {
         return str == null ? true : false;
     }

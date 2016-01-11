@@ -73,25 +73,25 @@ public class DBTableModel extends AbstractTableModel {
         return tableList.get(index);
     }
 
+    // 表格中的列定义
+    // 表名 注释 类名
+    private static final String[] columns = new String[] { "表名", "注释", "对应类名" };
+
+    public int getColumnCount() {
+        return columns.length;
+    }
+
     @Override
     public String getColumnName(int column) {
-        if (column == 0) {
-            return "表名";
-        } else {
-            return "注释";
-        }
+        return columns[column];
     }
-    
+
     public int getRowCount() {
         if (tableList == null) {
             return 0;
         } else {
             return tableList.size();
         }
-    }
-
-    public int getColumnCount() {
-        return 2;
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -103,10 +103,17 @@ public class DBTableModel extends AbstractTableModel {
         }
 
         TableEntity entity = tableList.get(rowIndex);
-        if (columnIndex == 0) {
+
+        switch (columnIndex) {
+        case 0:
             return entity.getName();
-        } else {
+        case 1:
             return entity.getShortRemark();
+        case 2:
+            return entity.getClassName();
+
+        default:
+            return null;
         }
     }
 
