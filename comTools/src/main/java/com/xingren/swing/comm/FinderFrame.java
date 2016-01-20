@@ -6,7 +6,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.Frame;
 
 /**
  * <pre>
@@ -14,11 +13,15 @@ import java.awt.Frame;
  * </pre>
  *
  * @author wwh
- * @date 2015年10月16日 下午4:32:45 
+ * @date 2015年10月16日 下午4:32:45
  *
  */
 public class FinderFrame extends JFrame {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
     /**

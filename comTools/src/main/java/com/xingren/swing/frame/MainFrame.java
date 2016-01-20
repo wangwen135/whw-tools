@@ -35,6 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import com.xingren.swing.feature.codec.Base64IFrame;
+import com.xingren.swing.feature.codec.FileBase64IFrame;
 import com.xingren.swing.feature.codec.HexIFrame;
 import com.xingren.swing.feature.codec.Native2AsciiIFrame;
 import com.xingren.swing.feature.codec.UrlIFrame;
@@ -177,13 +178,24 @@ public class MainFrame extends JFrame {
         JMenu mn_cedec = new JMenu("编码");
         menuBar.add(mn_cedec);
 
-        JMenuItem mntmBase = new JMenuItem("Base64");
-        mntmBase.addActionListener(new ActionListener() {
+        JMenu mnBase = new JMenu("Base64");
+        mn_cedec.add(mnBase);
+
+        JMenuItem mntmBase64 = new JMenuItem("Base64编码/解码");
+        mntmBase64.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addInternalFrame(new Base64IFrame());
             }
         });
-        mn_cedec.add(mntmBase);
+        mnBase.add(mntmBase64);
+
+        JMenuItem mntmFileBase64 = new JMenuItem("文件Base64编码/解码");
+        mntmFileBase64.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addInternalFrame(new FileBase64IFrame());
+            }
+        });
+        mnBase.add(mntmFileBase64);
 
         JMenuItem mntmHex = new JMenuItem("Hex");
         mntmHex.addActionListener(new ActionListener() {

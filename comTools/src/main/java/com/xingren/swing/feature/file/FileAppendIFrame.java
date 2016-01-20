@@ -28,13 +28,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.xingren.swing.frame.BaseJInternalFrame;
-import java.awt.FlowLayout;
-import javax.swing.border.EmptyBorder;
 
 /**
  * <pre>

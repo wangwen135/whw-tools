@@ -65,6 +65,16 @@ public class CodecUtils {
     }
 
     /**
+     * 测试一个给定的字符串是否只包含有效Base64字母字符。目前该方法将空格视为有效。
+     * 
+     * @param base64
+     * @return
+     */
+    public static boolean isBase64(String base64) {
+        return Base64.isBase64(base64);
+    }
+
+    /**
      * Base64编码.
      * 
      * @param input
