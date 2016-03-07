@@ -7,7 +7,7 @@
     持续。。。  🕓
 
 
-[下载程序](https://github.com/wangwen135/WHWTools/blob/master/WHWTools/release/WHWTools-0.0.1-SNAPSHOT.zip)
+[下载 WHWTools-0.0.1-SNAPSHOT.zip](https://github.com/wangwen135/WHWTools/raw/master/WHWTools/release/WHWTools-0.0.1-SNAPSHOT.zip)
 ---
 
 ####软件截图  
