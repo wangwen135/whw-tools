@@ -1,0 +1,156 @@
+/**
+ * Copyright(C) 2015-2025 杏仁科技
+ * All rights reserved
+ * ${date1} Created
+ */
+package ${packageName}.test.dao;
+
+import static org.junit.Assert.*;
+
+import java.util.Date;
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import ${packageName}.dao.I${table.className}Dao;
+import ${packageName}.model.${table.className}DO;
+
+/**
+ * <pre>
+ * 测试 ${table.className}Dao
+ * ${table.remark}
+ * 对应数据库表：${table.name}
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:sdb-spring.xml" })
+@Transactional
+public class Test${table.className}Dao {
+
+    private static final Logger log = LoggerFactory.getLogger(Test${table.className}Dao.class);
+
+    @Autowired
+    private I${table.className}Dao ${table.lowerClassName}Dao;
+
+    @Test
+    public void testInsert() {
+        ${table.className}DO baseDo = new ${table.className}DO();
+#foreach ($col in ${table.notPkColumns})
+        baseDo.${col.javaSetMethod}(${col.testValue});
+#end
+
+        int ret = ${table.lowerClassName}Dao.insert(baseDo);
+        log.debug("插入受影响行数：{}", ret);
+
+        ${table.primaryKey.javaClassName} id = baseDo.${table.primaryKey.javaGetMethod}();
+        log.debug("插入的ID是：{}", id);
+
+        ${table.className}DO rdo = ${table.lowerClassName}Dao.selectByPrimaryKey(id);
+
+        assertNotNull("插入的对象不能为空", rdo);
+
+        log.debug("插入的对象查询结果：{}", rdo);
+
+        int retdel = ${table.lowerClassName}Dao.deleteByPrimaryKey(id);
+
+        assertEquals("删除异常了", 1, retdel);
+
+        // @@@@@@@@@@@@ 测试选择性插入
+
+        ret = ${table.lowerClassName}Dao.insertSelective(baseDo);
+        log.debug("选择性插入受影响行数：{}", ret);
+
+        id = baseDo.${table.primaryKey.javaGetMethod}();
+        log.debug("选择性插入的ID是：{}", id);
+
+        retdel = ${table.lowerClassName}Dao.deleteByPrimaryKey(id);
+
+        assertEquals("删除异常了", 1, retdel);
+    }
+
+    @Test
+    public void testDeleteByPrimaryKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        int ret = ${table.lowerClassName}Dao.deleteByPrimaryKey(id);
+        log.debug("deleteByPrimaryKey( {} ) 受影响行数：{}", id, ret);
+        if (ret > 0) {
+            ${table.className}DO rdo = ${table.lowerClassName}Dao.selectByPrimaryKey(id);
+            assertNull("deleteByPrimaryKey 删除失败", rdo);
+        }
+    }
+
+    @Test
+    public void testSelectByPrimaryKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        ${table.className}DO rdo = ${table.lowerClassName}Dao.selectByPrimaryKey(id);
+        log.debug("selectByPrimaryKey( {} )  查询到记录：{}", id, rdo);
+    }
+
+    @Test
+    public void testSelectBySelective() {
+        ${table.className}DO record = new ${table.className}DO();
+        record.setLanguageCode("ZZ");
+        List<${table.className}DO> list = ${table.lowerClassName}Dao.selectBySelective(record);
+        log.debug("selectBySelective 查询到记录：{}", list.size());
+    }
+
+    @Test
+    public void testSelectByLanguage() {
+        List<${table.className}DO> list = ${table.lowerClassName}Dao.selectByLanguage("ZZ");
+        log.debug("selectByLanguage(\"ZZ\") 查询到记录：{}", list.size());
+    }
+
+    @Test
+    public void testSelectByLangAndCode() {
+        List<${table.className}DO> list = ${table.lowerClassName}Dao.selectByLangAndCode("ZZ", "9999");
+        log.debug("selectByLangAndCode(\"ZZ\" , \"9999\") 查询到记录：{}", list.size());
+    }
+
+    @Test
+    public void testChangeValidByPKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        int ret = ${table.lowerClassName}Dao.changeValidByPKey(id, 3);
+        log.debug("testChangeValidByPKey( {} , 3 ) 受影响行数：{}", id, ret);
+        if (ret > 0) {
+            ${table.className}DO rdo = ${table.lowerClassName}Dao.selectByPrimaryKey(id);
+            assertNotNull("changeValidByPKey 更新了不存在的记录", rdo);
+            assertTrue("changeValidByPKey 更新失败", rdo.getIfValid() == 3);
+        }
+    }
+
+    @Test
+    public void testUpdateByPrimaryKeySelective() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        String languageCode = "ZZ";
+        ${table.className}DO record = new ${table.className}DO();
+        record.${table.primaryKey.javaSetMethod}(id);
+        record.setLanguageCode(languageCode);
+        int ret = ${table.lowerClassName}Dao.updateByPrimaryKeySelective(record);
+        log.debug("updateByPrimaryKeySelective( {} ) 受影响行数：{}", id, ret);
+        if (ret > 0) {
+            ${table.className}DO rdo = ${table.lowerClassName}Dao.selectByPrimaryKey(id);
+            assertNotNull("updateByPrimaryKeySelective 更新了不存在的记录", rdo);
+            assertEquals("updateByPrimaryKeySelective 更新失败", languageCode, rdo.getLanguageCode());
+
+            // 继续条件查询
+            List<${table.className}DO> list = ${table.lowerClassName}Dao.selectBySelective(record);
+            assertTrue("selectBySelective 查询失败", list.size() > 0);
+
+            // 根据语言代码查询
+            list = ${table.lowerClassName}Dao.selectByLanguage(languageCode);
+            assertTrue("selectByLanguage 查询失败", list.size() > 0);
+        }
+    }
+
+}

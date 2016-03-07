@@ -1,0 +1,35 @@
+	<select id="selectBySelective" resultMap="BaseResultMap"
+		parameterType="${parameterType}">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM ${tableName}
+		<where> 
+#foreach($col in ${columns.keySet()})  
+			<if test="${columns.get($col)} != null">
+				AND $col = #{${columns.get($col)}}
+			</if>
+#end  
+  		</where>
+	</select>
+	
+	<select id="selectByLanguage" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM ${tableName}
+		WHERE language_code = #{language}
+	</select>
+	
+	<select id="selectByLangAndCode" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM ${tableName}
+		WHERE code =#{code} AND language_code = #{language}
+	</select>
+	
+	<update id="changeValidByPKey" parameterType="java.util.Map">
+		UPDATE ${tableName}
+		SET if_valid = #{valid}
+		WHERE ${idColumn} = #{${idProperty}}
+	</update>
