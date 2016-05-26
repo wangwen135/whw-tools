@@ -149,7 +149,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label);
 
         txt_host = new JTextField();
-        txt_host.setText("192.168.1.110");
+        txt_host.setText("192.168.1.210");
         panel_conInfo.add(txt_host);
         txt_host.setColumns(15);
 
@@ -165,7 +165,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label_2);
 
         txt_dbName = new JTextField();
-        txt_dbName.setText("sdb");
+        txt_dbName.setText("hinge");
         panel_conInfo.add(txt_dbName);
         txt_dbName.setColumns(10);
 
@@ -173,7 +173,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label_3);
 
         txt_userName = new JTextField();
-        txt_userName.setText("sdb");
+        txt_userName.setText("root");
         panel_conInfo.add(txt_userName);
         txt_userName.setColumns(12);
 
@@ -183,7 +183,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         txt_pwd = new JPasswordField();
         txt_pwd.setColumns(12);
         panel_conInfo.add(txt_pwd);
-        txt_pwd.setText("123456");
+        txt_pwd.setText("root");
 
         JButton btn_connection = new JButton("连接");
         btn_connection.addActionListener(new ActionListener() {
@@ -549,7 +549,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         txta_customVar = new JTextArea();
         txta_customVar.setToolTipText("<html>\r\n一行表示一个变量<br>\r\n用‘=’分割，‘=’两侧可以出现空格\r\n</html>");
-        txta_customVar.setText("author = wwh\npackageName = com.xingren.sdb");
+        txta_customVar.setText("author = wwh\r\npackageName = com.zionsec");
         scrollPane_1.setViewportView(txta_customVar);
 
         JLabel label_9 = new JLabel("生成文件名模板：");

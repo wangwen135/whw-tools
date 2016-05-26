@@ -1,0 +1,91 @@
+package ${packageName}.api;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import ${packageName}.domain.${table.className};
+
+/**
+ * <pre>
+ * ${table.remark}服务接口
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+public interface ${table.className}Service {
+    /**
+     * 插入
+     * 
+     * @param ${table.lowerClassName}
+     * @return
+     */
+    int insert(${table.className} ${table.lowerClassName});
+
+    /**
+     * 选择性插入
+     * 
+     * @param ${table.lowerClassName}
+     * @return
+     */
+    int insertSelective(${table.className} ${table.lowerClassName});
+
+    /**
+     * 根据主键删除
+     * 
+     * @param ${table.primaryKey.property}
+     * @return
+     */
+    int deleteByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property});
+
+    /**
+     * 根据主键更新
+     * 
+     * @param ${table.lowerClassName}
+     * @return
+     */
+    int updateByPrimaryKey(${table.className} ${table.lowerClassName});
+
+    /**
+     * 根据主键选择性更新
+     * 
+     * @param ${table.lowerClassName}
+     * @return
+     */
+    int updateByPrimaryKeySelective(${table.className} ${table.lowerClassName});
+
+    /**
+     * 根据对象选择性查询
+     * 
+     * @param ${table.lowerClassName}
+     * @return
+     */
+    List<${table.className}> selectBySelective(${table.className} ${table.lowerClassName});
+
+    /**
+     * 根据主键查询
+     * 
+     * @param ${table.primaryKey.property}
+     * @return
+     */
+    ${table.className} findByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property});
+
+    /**
+     * 分页查询
+     * 
+     * @param ${table.lowerClassName}
+     * @param pageRequest
+     * @return
+     */
+    Page<${table.className}> findListByParam(${table.className} ${table.lowerClassName}, PageRequest pageRequest);
+
+    /**
+     * 查询全部
+     * 
+     * @return
+     */
+    List<${table.className}> findAll();
+}

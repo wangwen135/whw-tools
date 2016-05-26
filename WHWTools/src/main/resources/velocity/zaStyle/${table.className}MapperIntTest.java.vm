@@ -1,0 +1,128 @@
+
+package ${packageName}.mapper;
+
+import static org.junit.Assert.*;
+
+#foreach ($class in ${table.importClass})
+import ${class};
+#end
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import ${packageName}.mapper.${table.className}Mapper;
+import ${packageName}.domain.${table.className};
+
+/**
+ * <pre>
+ * 测试 ${table.className}Mapper
+ * ${table.remark}
+ * 对应数据库表：${table.name}
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@Transactional
+public class ${table.className}MapperIntTest {
+
+    private static final Logger log = LoggerFactory.getLogger(${table.className}MapperIntTest.class);
+
+    @Autowired
+    private ${table.className}Mapper ${table.lowerClassName}Mapper;
+
+    @Test
+    public void testInsert() {
+        ${table.className} baseDo = new ${table.className}();
+#foreach ($col in ${table.columns})
+        baseDo.${col.javaSetMethod}(${col.testValue});
+#end
+
+        int ret = ${table.lowerClassName}Mapper.insert(baseDo);
+        log.debug("插入受影响行数：{}", ret);
+
+        ${table.primaryKey.javaClassName} id = baseDo.${table.primaryKey.javaGetMethod}();
+        log.debug("插入的ID是：{}", id);
+
+        ${table.className} rdo = ${table.lowerClassName}Mapper.findByPrimaryKey(id);
+
+        assertNotNull("插入的对象不能为空", rdo);
+
+        log.debug("插入的对象查询结果：{}", rdo);
+
+        int retdel = ${table.lowerClassName}Mapper.deleteByPrimaryKey(id);
+
+        assertEquals("删除异常了", 1, retdel);
+
+        // @@@@@@@@@@@@ 测试选择性插入
+
+        ret = ${table.lowerClassName}Mapper.insertSelective(baseDo);
+        log.debug("选择性插入受影响行数：{}", ret);
+
+        id = baseDo.${table.primaryKey.javaGetMethod}();
+        log.debug("选择性插入的ID是：{}", id);
+
+        retdel = ${table.lowerClassName}Mapper.deleteByPrimaryKey(id);
+
+        assertEquals("删除异常了", 1, retdel);
+    }
+
+    @Test
+    public void testDeleteByPrimaryKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        int ret = ${table.lowerClassName}Mapper.deleteByPrimaryKey(id);
+        log.debug("deleteByPrimaryKey( {} ) 受影响行数：{}", id, ret);
+        if (ret > 0) {
+            ${table.className} rdo = ${table.lowerClassName}Mapper.findByPrimaryKey(id);
+            assertNull("deleteByPrimaryKey 删除失败", rdo);
+        }
+    }
+
+    @Test
+    public void testFindByPrimaryKey() {
+        ${table.primaryKey.javaClassName} id = ${table.primaryKey.testValue};
+        ${table.className} rdo = ${table.lowerClassName}Mapper.findByPrimaryKey(id);
+        log.debug("findByPrimaryKey( {} )  查询到记录：{}", id, rdo);
+    }
+
+    @Test
+    public void testSelectBySelective() {
+        ${table.className} record = new ${table.className}();
+#foreach ($col in ${table.notPkColumns})
+        record.${col.javaSetMethod}(${col.testValue});
+#end
+        List<${table.className}> list = ${table.lowerClassName}Mapper.selectBySelective(record);
+        log.debug("selectBySelective 查询到记录：{}", list.size());
+    }
+
+    @Test
+    public void testUpdateByPrimaryKeySelective() {
+        ${table.className} record = new ${table.className}();
+#foreach ($col in ${table.columns})
+        record.${col.javaSetMethod}(${col.testValue});
+#end
+
+        int ret = ${table.lowerClassName}Mapper.updateByPrimaryKeySelective(record);
+        log.debug("updateByPrimaryKeySelective( ) 受影响行数：{}", ret);
+        if (ret > 0) {
+            ${table.className} rdo = ${table.lowerClassName}Mapper.findByPrimaryKey(record.${table.primaryKey.javaGetMethod}());
+            assertNotNull("updateByPrimaryKeySelective 更新了不存在的记录", rdo);
+
+            // 继续条件查询
+            List<${table.className}> list = ${table.lowerClassName}Mapper.selectBySelective(record);
+            assertTrue("selectBySelective 查询失败", list.size() > 0);
+
+        }
+    }
+
+}

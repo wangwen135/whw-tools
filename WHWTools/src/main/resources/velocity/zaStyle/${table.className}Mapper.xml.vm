@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${packageName}.mapper.${table.className}Mapper">
+  <resultMap id="BaseResultMap" type="${packageName}.domain.${table.className}">
+    <id column="${table.primaryKey.name}" property="${table.primaryKey.property}" jdbcType="${table.primaryKey.mbJdbcType}"/>
+#foreach ($col in ${table.columns})
+#if(!${col.primaryKey})
+    <result column="${col.name}" property="${col.property}" jdbcType="${col.mbJdbcType}"/>
+#end
+#end
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    #foreach ($col in ${table.columns})
+${col.name}#if($velocityCount != $table.columnCount), #end
+#set($r = $velocityCount % 5)
+#if($r == 0)
+
+    #end
+#end
+
+  </sql>
+
+  <select id="findByPrimaryKey" resultMap="BaseResultMap" parameterType="${table.primaryKey.javaTypeClass}">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM ${table.name}
+    WHERE ${table.primaryKey.name} = #{${table.primaryKey.property} ,jdbcType=${table.primaryKey.mbJdbcType}}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="${table.primaryKey.javaTypeClass}">
+    DELETE FROM ${table.name}
+    WHERE ${table.primaryKey.name} = #{${table.primaryKey.property} ,jdbcType=${table.primaryKey.mbJdbcType}}
+  </delete>
+
+  <insert id="insert" parameterType="${packageName}.domain.${table.className}">
+    INSERT INTO ${table.name} (
+    #foreach ($col in ${table.columns})
+${col.name}#if($velocityCount != $table.columns.size()), #end
+#set($r = $velocityCount % 5)
+#if($r == 0)
+
+    #end
+#end
+
+    ) VALUES (
+    #foreach ($col in ${table.columns})
+#{${col.property} ,jdbcType=${col.mbJdbcType}}#if($velocityCount != $table.columns.size()), #end
+#set($r = $velocityCount % 5)
+#if($r == 0)
+
+    #end
+#end
+
+    )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="${packageName}.domain.${table.className}">
+    insert into ${table.name}
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach ($col in ${table.columns})
+      <if test="${col.property} != null">
+        ${col.name},
+      </if>
+#end
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach ($col in ${table.columns})
+      <if test="${col.property} != null">
+        #{${col.property} ,jdbcType=${col.mbJdbcType}},
+      </if>
+#end
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="${packageName}.domain.${table.className}">
+    UPDATE ${table.name}
+    <set>
+#foreach ($col in ${table.notPkColumns})
+      <if test="${col.property} != null">
+        ${col.name} = #{${col.property} ,jdbcType=${col.mbJdbcType}},
+      </if>
+#end
+    </set>
+    WHERE ${table.primaryKey.name} = #{${table.primaryKey.property} ,jdbcType=${table.primaryKey.mbJdbcType}}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="${packageName}.domain.${table.className}">
+    UPDATE ${table.name} SET
+#foreach ($col in ${table.notPkColumns})
+    ${col.name} = #{${col.property} ,jdbcType=${col.mbJdbcType}}#if($velocityCount != $table.notPkColumns.size()),#end
+
+#end
+    WHERE ${table.primaryKey.name} = #{${table.primaryKey.property} ,jdbcType=${table.primaryKey.mbJdbcType}}
+  </update>
+
+  <select id="selectBySelective" resultMap="BaseResultMap"
+    parameterType="${packageName}.domain.${table.className}">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM ${table.name}
+    <where> 
+#foreach ($col in ${table.columns})
+      <if test="${col.property} != null">
+        AND ${col.name} = #{${col.property} ,jdbcType=${col.mbJdbcType}}
+      </if>
+#end
+      </where>
+  </select>
+  
+  <select id="findListByParam" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM ${table.name}
+    <where>
+      1 = 1
+#foreach ($col in ${table.columns})
+      <if test="condition.${col.property} != null">
+        AND ${col.name} = #{condition.${col.property} ,jdbcType=${col.mbJdbcType}}
+      </if>
+#end
+      <if test="offset != null">
+        limit #{offset}, #{limit}
+      </if>
+    </where>
+  </select>
+  
+  <select id="findTotalByParam" parameterType="java.util.Map" resultType="java.lang.Integer" >
+    SELECT COUNT(*) FROM ${table.name}
+    <where>
+      1 = 1
+#foreach ($col in ${table.columns})
+      <if test="condition.${col.property} != null">
+        AND ${col.name} = #{condition.${col.property} ,jdbcType=${col.mbJdbcType}}
+      </if>
+#end
+    </where>    
+  </select>
+
+</mapper>

@@ -1,0 +1,107 @@
+package ${packageName}.resource;
+
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import ${packageName}.api.${table.className}Service;
+import ${packageName}.domain.${table.className};
+
+@Path("/${table.lowerClassName}s")
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+public class ${table.className}Resource {
+    private static Logger logger = Logger.getLogger(${table.className}Resource.class);
+
+    @Context
+    private UriInfo uriInfo;
+
+    @Autowired
+    private ${table.className}Service ${table.lowerClassName}Service;
+
+    @Path("/")
+    @POST
+    public Response add${table.className}(${table.className} ${table.lowerClassName}) {
+        // TODO: 1. 生成ID 2. 添加校验逻辑
+
+        ${table.lowerClassName}.setId(System.nanoTime());
+
+        ${table.lowerClassName}Service.insertSelective(${table.lowerClassName});
+
+        URI location = uriInfo.getBaseUriBuilder().path(${table.className}Resource.class, "get${table.className}").build(${table.lowerClassName}.getId());
+
+        return Response.created(location).build();
+    }
+
+    @Path("/{${table.primaryKey.property}}")
+    @DELETE
+    public Response delete${table.className}(@PathParam("${table.primaryKey.property}") ${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        if (${table.primaryKey.property} == null) {
+            Response.status(Status.BAD_REQUEST).header("X-Enhanced-Code", "Parameter ${table.primaryKey.property} is null.");
+        }
+
+        ${table.lowerClassName}Service.deleteByPrimaryKey(${table.primaryKey.property});
+
+        return Response.ok().build();
+    }
+
+    @Path("/{${table.primaryKey.property}}")
+    @PUT
+    public Response update${table.className}(@PathParam("${table.primaryKey.property}") ${table.primaryKey.javaClassName} ${table.primaryKey.property}, ${table.className} ${table.lowerClassName}) {
+        if (${table.primaryKey.property} == null) {
+            Response.status(Status.BAD_REQUEST).header("X-Enhanced-Code", "Parameter ${table.primaryKey.property} is null.");
+        }
+
+        ${table.lowerClassName}.setId(${table.primaryKey.property});
+
+        ${table.lowerClassName}Service.updateByPrimaryKeySelective(${table.lowerClassName});
+
+        return Response.ok().entity(${table.lowerClassName}).build();
+    }
+
+    @Path("/")
+    @GET
+    public Response get${table.className}s(@QueryParam("") ${table.className} ${table.lowerClassName}, @QueryParam("page") @DefaultValue("1") int page, @QueryParam("pageSize") @DefaultValue("20") int pageSize) {
+        logger.info(String.format("${table.className}Resource.get${table.className}s():page=%s, pageSize=%s", page, pageSize));
+
+        PageRequest pageRequest = new PageRequest(page, pageSize);
+        Page<${table.className}> page${table.className} = ${table.lowerClassName}Service.findListByParam(${table.lowerClassName}, pageRequest);
+
+        return Response.ok().entity(page${table.className}).build();
+    }
+
+    @Path("/{${table.primaryKey.property}}")
+    @GET
+    public Response get${table.className}(@PathParam("${table.primaryKey.property}") ${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        if (${table.primaryKey.property} == null) {
+            return Response.status(Status.BAD_REQUEST).header("X-Enhanced-Code", "Parameter ${table.primaryKey.property} is null.").build();
+        }
+
+        ${table.className} ${table.lowerClassName} = ${table.lowerClassName}Service.findByPrimaryKey(${table.primaryKey.property});
+
+        if (${table.lowerClassName} == null) {
+            return Response.status(Status.NOT_FOUND).header("X-Enhanced-Code", String.format("No ${table.lowerClassName} with id %s", ${table.primaryKey.property})).build();
+        }
+
+        return Response.ok().entity(${table.lowerClassName}).build();
+    }
+}

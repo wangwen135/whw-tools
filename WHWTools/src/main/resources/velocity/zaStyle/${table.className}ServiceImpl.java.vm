@@ -1,0 +1,95 @@
+package ${packageName}.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+import ${packageName}.api.${table.className}Service;
+import ${packageName}.domain.${table.className};
+import ${packageName}.mapper.${table.className}Mapper;
+
+/**
+ * <pre>
+ * ${table.remark}服务实现
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@Service
+public class ${table.className}ServiceImpl implements ${table.className}Service {
+
+    private static Logger logger = Logger.getLogger(${table.className}ServiceImpl.class);
+
+    @Autowired
+    private ${table.className}Mapper ${table.lowerClassName}Mapper;
+
+    @Override
+    public int insert(${table.className} ${table.lowerClassName}) {
+        return ${table.lowerClassName}Mapper.insert(${table.lowerClassName});
+    }
+
+    @Override
+    public int insertSelective(${table.className} ${table.lowerClassName}) {
+        return ${table.lowerClassName}Mapper.insertSelective(${table.lowerClassName});
+    }
+
+    @Override
+    public int deleteByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        return ${table.lowerClassName}Mapper.deleteByPrimaryKey(${table.primaryKey.property});
+    }
+
+    @Override
+    public int updateByPrimaryKey(${table.className} ${table.lowerClassName}) {
+        return ${table.lowerClassName}Mapper.updateByPrimaryKey(${table.lowerClassName});
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(${table.className} ${table.lowerClassName}) {
+        return ${table.lowerClassName}Mapper.updateByPrimaryKeySelective(${table.lowerClassName});
+    }
+
+    @Override
+    public List<${table.className}> selectBySelective(${table.className} ${table.lowerClassName}) {
+        return ${table.lowerClassName}Mapper.selectBySelective(${table.lowerClassName});
+    }
+
+    @Override
+    public ${table.className} findByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        return ${table.lowerClassName}Mapper.findByPrimaryKey(${table.primaryKey.property});
+    }
+
+    @Override
+    public Page<${table.className}> findListByParam(${table.className} ${table.lowerClassName}, PageRequest pageRequest) {
+        logger.debug(String.format("${table.className}ServiceImpl.findListByParam():currentPage=%s, pageSize=%s", pageRequest.getPageNumber(), pageRequest.getPageSize()));
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("condition", ${table.lowerClassName});
+        params.put("offset", pageRequest.getOffset() - pageRequest.getPageSize());
+        params.put("limit", pageRequest.getPageSize());
+
+        int total = ${table.lowerClassName}Mapper.findTotalByParam(params);
+
+        List<${table.className}> resultList = ${table.lowerClassName}Mapper.findListByParam(params);
+
+        Page<${table.className}> page = new PageImpl<${table.className}>(resultList, pageRequest, total);
+
+        return page;
+    }
+
+    @Override
+    public List<${table.className}> findAll() {
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        return ${table.lowerClassName}Mapper.findListByParam(params);
+    }
+
+}
