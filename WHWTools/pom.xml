@@ -22,7 +22,7 @@
 
 		<mybatis.version>3.2.8</mybatis.version>
 
-		<maven_test_skip>false</maven_test_skip>
+		<maven_test_skip>true</maven_test_skip>
 
 		<jdk_version>1.7</jdk_version>
 
@@ -117,7 +117,8 @@
 
 	<build>
 		<plugins>
-			<plugin>
+		
+			 <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.18.1</version>
@@ -126,9 +127,11 @@
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
 				<configuration>
 					<source>${jdk_version}</source>
 					<target>${jdk_version}</target>
@@ -136,9 +139,12 @@
 				</configuration>
 			</plugin>
 
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				        <version>3.0.2</version>
+				
 				<configuration>
 					<archive>
 						<manifest>
@@ -149,7 +155,9 @@
 					</archive>
 				</configuration>
 			</plugin>
-
+ 			-->
+ 			
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -193,13 +201,13 @@
 					</execution>
 				</executions>
 			</plugin>
-
+ 			-->
+ 			
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-
-					<appendAssemblyId>false</appendAssemblyId>
+					<!-- <appendAssemblyId>false</appendAssemblyId> -->
 					<descriptors>
 						<descriptor>src/main/assembly/assembly.xml</descriptor>
 					</descriptors>
