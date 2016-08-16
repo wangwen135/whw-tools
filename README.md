@@ -5,9 +5,10 @@
     开发中...没进行整理的
     淡定。。   😤  🙏
     持续。。。  🕓
+    
 
 
-[下载 WHWTools-0.0.1-SNAPSHOT.zip](https://github.com/wangwen135/WHWTools/raw/master/WHWTools/release/WHWTools-0.0.1-SNAPSHOT.zip)
+[下载 WHWTools-0.0.1-SNAPSHOT-bin.tar.gz](https://github.com/wangwen135/WHWTools/raw/master/WHWTools/release/WHWTools-0.0.1-SNAPSHOT-bin.tar.gz)
 ---
 
 ####软件截图  
