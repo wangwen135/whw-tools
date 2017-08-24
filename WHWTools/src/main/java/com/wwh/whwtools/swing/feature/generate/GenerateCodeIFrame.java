@@ -639,6 +639,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         ckBox_coverFileName = new JCheckBox("覆盖文件名");
         ckBox_coverFileName.setToolTipText("以模板文件名.vm之前的内容覆盖文件名");
+        ckBox_coverFileName.setSelected(true);
         GridBagConstraints gbc_ckBox_coverFileName = new GridBagConstraints();
         gbc_ckBox_coverFileName.insets = new Insets(0, 0, 5, 0);
         gbc_ckBox_coverFileName.gridx = 5;

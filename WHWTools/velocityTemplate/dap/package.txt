@@ -1,0 +1,5 @@
+author = wwh
+packageName = com.zionsec.dap.platform.rds
+packageNameDomain = com.zionsec.dap
+packageNameResource = com.zionsec.dap.biz
+packageNameService = com.zionsec.dap.platform

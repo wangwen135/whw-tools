@@ -1,0 +1,130 @@
+package ${packageName}.spring;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+import ${packageNameDomain}.domain.Page;
+import ${packageNameDomain}.domain.PageRequest;
+import ${packageNameDomain}.domain.${table.className};
+import ${packageNameService}.api.${table.className}Service;
+import ${packageName}.mapper.${table.className}Mapper;
+
+/**
+ * <pre>
+ * ${table.remark}服务实现
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+@Service("${table.lowerClassName}Service")
+public class ${table.className}ServiceImpl implements ${table.className}Service {
+
+    private static Logger logger = LoggerFactory.getLogger(${table.className}ServiceImpl.class);
+
+    @Autowired
+    private ${table.className}Mapper ${table.lowerClassName}Mapper;
+
+    @Override
+    public ${table.className} insert(${table.className} ${table.lowerClassName}) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("插入新记录的参数是：{}", JSON.toJSONString(${table.lowerClassName}));
+        }
+
+        if (${table.lowerClassName}Mapper.insert(${table.lowerClassName}) == 1) {
+            return ${table.lowerClassName};
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ${table.className} insertSelective(${table.className} ${table.lowerClassName}) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("选择性插入新记录的参数是：{}", JSON.toJSONString(${table.lowerClassName}));
+        }
+
+        if (${table.lowerClassName}Mapper.insertSelective(${table.lowerClassName}) == 1) {
+            return ${table.lowerClassName};
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        logger.debug("删除数据的${table.primaryKey.property}是：{}", ${table.primaryKey.property});
+
+        return ${table.lowerClassName}Mapper.deleteByPrimaryKey(${table.primaryKey.property}) == 1;
+    }
+
+    @Override
+    public boolean updateByPrimaryKey(${table.className} ${table.lowerClassName}) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("根据主键更新记录的参数是：{}", JSON.toJSONString(${table.lowerClassName}));
+        }
+
+        return ${table.lowerClassName}Mapper.updateByPrimaryKey(${table.lowerClassName}) == 1;
+    }
+
+    @Override
+    public boolean updateByPrimaryKeySelective(${table.className} ${table.lowerClassName}) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("根据主键选择性更新记录的参数是：{}", JSON.toJSONString(${table.lowerClassName}));
+        }
+
+        return ${table.lowerClassName}Mapper.updateByPrimaryKeySelective(${table.lowerClassName}) == 1;
+    }
+
+    @Override
+    public List<${table.className}> selectBySelective(${table.className} ${table.lowerClassName}) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("选择性查询记录的参数是：{}", JSON.toJSONString(${table.lowerClassName}));
+        }
+
+        return ${table.lowerClassName}Mapper.selectBySelective(${table.lowerClassName});
+    }
+
+    @Override
+    public ${table.className} findByPrimaryKey(${table.primaryKey.javaClassName} ${table.primaryKey.property}) {
+        logger.debug("查询数据的${table.primaryKey.property}是：{}", ${table.primaryKey.property});
+
+        return ${table.lowerClassName}Mapper.findByPrimaryKey(${table.primaryKey.property});
+    }
+
+    @Override
+    public Page<${table.className}> findListByParam(${table.className} ${table.lowerClassName}, PageRequest pageRequest) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("查询数据的参数是：{}\n\t页数是：{} , 页码是：{}", JSON.toJSONString(${table.lowerClassName}), pageRequest.getPageNumber(), pageRequest.getPageSize());
+        }
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("condition", ${table.lowerClassName});
+        params.put("offset", pageRequest.getOffset());
+        params.put("limit", pageRequest.getPageSize());
+
+        int total = ${table.lowerClassName}Mapper.findTotalByParam(params);
+
+        List<${table.className}> resultList = ${table.lowerClassName}Mapper.findListByParam(params);
+
+        Page<${table.className}> page = new Page<${table.className}>(pageRequest.getOffset(), pageRequest.getPageSize(), total, resultList);
+
+        return page;
+    }
+
+    @Override
+    public List<${table.className}> findAll() {
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        return ${table.lowerClassName}Mapper.findListByParam(params);
+    }
+
+}

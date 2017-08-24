@@ -45,6 +45,7 @@ public class GenerateHelp {
 		javaTypeMap.put("FLOAT", "java.lang.Float");
 		javaTypeMap.put("DOUBLE", "java.lang.Double");
 		javaTypeMap.put("BLOB", "java.lang.byte[]");
+		javaTypeMap.put("TEXT", "java.lang.String");
 	}
 
 	/**
@@ -54,6 +55,8 @@ public class GenerateHelp {
 	static {
 		mybatisJdbcTypeMap.put("INT", "INTEGER");
 		mybatisJdbcTypeMap.put("DATETIME", "TIMESTAMP");
+		mybatisJdbcTypeMap.put("DATETIME", "TIMESTAMP");
+		mybatisJdbcTypeMap.put("TEXT", "VARCHAR");
 	}
 
 	/**
