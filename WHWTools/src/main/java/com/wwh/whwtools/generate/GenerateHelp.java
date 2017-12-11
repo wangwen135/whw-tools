@@ -46,6 +46,7 @@ public class GenerateHelp {
 		javaTypeMap.put("DOUBLE", "java.lang.Double");
 		javaTypeMap.put("BLOB", "java.lang.byte[]");
 		javaTypeMap.put("TEXT", "java.lang.String");
+		javaTypeMap.put("LONGTEXT", "java.lang.String");
 	}
 
 	/**
