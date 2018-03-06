@@ -47,6 +47,7 @@ public class GenerateHelp {
 		javaTypeMap.put("BLOB", "java.lang.byte[]");
 		javaTypeMap.put("TEXT", "java.lang.String");
 		javaTypeMap.put("LONGTEXT", "java.lang.String");
+		javaTypeMap.put("MEDIUMTEXT", "java.lang.String");
 	}
 
 	/**
