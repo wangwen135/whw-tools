@@ -124,6 +124,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
     private GlassPanel glassPanel;
 
     private JCheckBox ckBox_coverFileName;
+    private JTextField txt_rmTbPrefix;
+    private JTextField txt_rmFdPrefix;
 
     public GenerateCodeIFrame() {
         super();
@@ -145,7 +147,14 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         fl_panel_conInfo.setAlignment(FlowLayout.LEFT);
         panel.add(panel_conInfo, BorderLayout.NORTH);
 
-        JLabel label = new JLabel("地址");
+        JComboBox<String> comboBox = new JComboBox<String>();
+        comboBox.setToolTipText("目前只支持MySQL数据库");
+        comboBox.setEnabled(false);
+        comboBox.setEditable(true);
+        comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "MySQL" }));
+        panel_conInfo.add(comboBox);
+
+        JLabel label = new JLabel("  地址");
         panel_conInfo.add(label);
 
         txt_host = new JTextField();
@@ -165,7 +174,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label_2);
 
         txt_dbName = new JTextField();
-        txt_dbName.setText("hinge");
+        txt_dbName.setText("dbName");
         panel_conInfo.add(txt_dbName);
         txt_dbName.setColumns(10);
 
@@ -360,19 +369,22 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_right.setLayout(new BorderLayout(0, 0));
 
         JPanel panel_right_top = new JPanel();
-        panel_right_top.setPreferredSize(new Dimension(10, 360));
+        panel_right_top.setPreferredSize(new Dimension(10, 370));
         panel_right_top.setLayout(new BorderLayout(0, 0));
         panel_right.add(panel_right_top, BorderLayout.NORTH);
 
         JPanel panel_right_buttom = new JPanel();
-        panel_right_buttom.setPreferredSize(new Dimension(10, 28));
+        panel_right_buttom.setPreferredSize(new Dimension(10, 30));
         panel_right_top.add(panel_right_buttom, BorderLayout.SOUTH);
 
         GridBagLayout gbl_panel_right_top = new GridBagLayout();
+        gbl_panel_right_top.rowWeights = new double[] { 0.0 };
+        gbl_panel_right_top.rowHeights = new int[] { 0 };
         panel_right_buttom.setLayout(gbl_panel_right_top);
 
         JLabel label_6 = new JLabel("表名");
         GridBagConstraints gbc_label_6 = new GridBagConstraints();
+        gbc_label_6.anchor = GridBagConstraints.SOUTH;
         gbc_label_6.insets = new Insets(0, 0, 0, 5);
         gbc_label_6.gridx = 0;
         gbc_label_6.gridy = 0;
@@ -383,6 +395,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         txt_tableName.setEditable(false);
         txt_tableName.setColumns(25);
         GridBagConstraints gbc_txt_tableName = new GridBagConstraints();
+        gbc_txt_tableName.anchor = GridBagConstraints.SOUTH;
         gbc_txt_tableName.fill = GridBagConstraints.HORIZONTAL;
         gbc_txt_tableName.insets = new Insets(0, 0, 0, 5);
         gbc_txt_tableName.gridx = 1;
@@ -391,6 +404,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         JLabel label_7 = new JLabel("注释");
         GridBagConstraints gbc_label_7 = new GridBagConstraints();
+        gbc_label_7.anchor = GridBagConstraints.SOUTH;
         gbc_label_7.insets = new Insets(0, 0, 0, 5);
         gbc_label_7.gridx = 2;
         gbc_label_7.gridy = 0;
@@ -400,6 +414,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         txt_tableRemark.setBackground(Color.WHITE);
         txt_tableRemark.setEditable(false);
         GridBagConstraints gbc_txt_tableRemark = new GridBagConstraints();
+        gbc_txt_tableRemark.anchor = GridBagConstraints.SOUTH;
         gbc_txt_tableRemark.fill = GridBagConstraints.HORIZONTAL;
         gbc_txt_tableRemark.insets = new Insets(0, 0, 0, 5);
         gbc_txt_tableRemark.weightx = 1;
@@ -413,7 +428,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         GridBagLayout gbl_panel_generate = new GridBagLayout();
         gbl_panel_generate.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
         gbl_panel_generate.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        gbl_panel_generate.columnWeights = new double[] { 0.0, 0.0, 1.0, 2.0, 0.0, 0.0, Double.MIN_VALUE };
+        gbl_panel_generate.columnWeights = new double[] { 0.0, 1.0, 1.0, 2.0, 1.0, 0.0, Double.MIN_VALUE };
         gbl_panel_generate.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
         panel_generate.setLayout(gbl_panel_generate);
 
@@ -549,7 +564,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         txta_customVar = new JTextArea();
         txta_customVar.setToolTipText("<html>\r\n一行表示一个变量<br>\r\n用‘=’分割，‘=’两侧可以出现空格\r\n</html>");
-        txta_customVar.setText("author = wwh\r\npackageName = com.zionsec");
+        txta_customVar.setText("author = wwh\r\npackageName = com.wwh.tools");
         scrollPane_1.setViewportView(txta_customVar);
 
         JLabel label_9 = new JLabel("生成文件名模板：");
@@ -606,13 +621,6 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_generate.add(txt_vmFile, gbc_txt_vmFile);
         txt_vmFile.setColumns(10);
 
-        JButton btn_generateAll = new JButton("生成左侧勾选的表");
-        btn_generateAll.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                generateAllFile();
-            }
-        });
-
         JButton btn_selectVMFile = new JButton("选择模板");
         btn_selectVMFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -645,11 +653,54 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         gbc_ckBox_coverFileName.gridx = 5;
         gbc_ckBox_coverFileName.gridy = 5;
         panel_generate.add(ckBox_coverFileName, gbc_ckBox_coverFileName);
+
+        JButton btn_generateAll = new JButton("生成左侧勾选的表");
+        btn_generateAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                generateAllFile();
+            }
+        });
+
+        JLabel lbl_rmTbPrefix = new JLabel("去除表名前缀：");
+        GridBagConstraints gbc_lbl_rmTbPrefix = new GridBagConstraints();
+        gbc_lbl_rmTbPrefix.anchor = GridBagConstraints.EAST;
+        gbc_lbl_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_lbl_rmTbPrefix.gridx = 0;
+        gbc_lbl_rmTbPrefix.gridy = 6;
+        panel_generate.add(lbl_rmTbPrefix, gbc_lbl_rmTbPrefix);
+
+        txt_rmTbPrefix = new JTextField();
+        GridBagConstraints gbc_txt_rmTbPrefix = new GridBagConstraints();
+        gbc_txt_rmTbPrefix.gridwidth = 2;
+        gbc_txt_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_txt_rmTbPrefix.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txt_rmTbPrefix.gridx = 1;
+        gbc_txt_rmTbPrefix.gridy = 6;
+        panel_generate.add(txt_rmTbPrefix, gbc_txt_rmTbPrefix);
+        txt_rmTbPrefix.setColumns(10);
+
+        JLabel lbl_rmFdPrefix = new JLabel("去除字段前缀：");
+        GridBagConstraints gbc_lbl_rmFdPrefix = new GridBagConstraints();
+        gbc_lbl_rmFdPrefix.anchor = GridBagConstraints.EAST;
+        gbc_lbl_rmFdPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_lbl_rmFdPrefix.gridx = 3;
+        gbc_lbl_rmFdPrefix.gridy = 6;
+        panel_generate.add(lbl_rmFdPrefix, gbc_lbl_rmFdPrefix);
+
+        txt_rmFdPrefix = new JTextField();
+        GridBagConstraints gbc_txt_rmFdPrefix = new GridBagConstraints();
+        gbc_txt_rmFdPrefix.gridwidth = 2;
+        gbc_txt_rmFdPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_txt_rmFdPrefix.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txt_rmFdPrefix.gridx = 4;
+        gbc_txt_rmFdPrefix.gridy = 6;
+        panel_generate.add(txt_rmFdPrefix, gbc_txt_rmFdPrefix);
+        txt_rmFdPrefix.setColumns(10);
         GridBagConstraints gbc_btn_generateAll = new GridBagConstraints();
         gbc_btn_generateAll.gridwidth = 2;
-        gbc_btn_generateAll.insets = new Insets(0, 0, 5, 5);
+        gbc_btn_generateAll.insets = new Insets(0, 0, 0, 5);
         gbc_btn_generateAll.gridx = 1;
-        gbc_btn_generateAll.gridy = 6;
+        gbc_btn_generateAll.gridy = 7;
         panel_generate.add(btn_generateAll, gbc_btn_generateAll);
 
         JButton btn_generate = new JButton("生成选中表");
@@ -660,9 +711,9 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         });
         GridBagConstraints gbc_btn_generate = new GridBagConstraints();
         gbc_btn_generate.gridwidth = 2;
-        gbc_btn_generate.insets = new Insets(0, 0, 5, 5);
+        gbc_btn_generate.insets = new Insets(0, 0, 0, 5);
         gbc_btn_generate.gridx = 3;
-        gbc_btn_generate.gridy = 6;
+        gbc_btn_generate.gridy = 7;
         panel_generate.add(btn_generate, gbc_btn_generate);
 
         JScrollPane scrollPane_table = new JScrollPane();
@@ -676,6 +727,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         setCenterTableColumnPreferredWidth();
 
+        // 注释掉这个就可以使用windowbuiler GUI插件了
         // ############ 设置玻璃面板
         glassPanel = new GlassPanel("/image/loading1.gif");
         setGlassPane(glassPanel);
