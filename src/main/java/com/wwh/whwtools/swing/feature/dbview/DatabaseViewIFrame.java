@@ -31,11 +31,11 @@ import javax.swing.event.TableModelListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wwh.whwtools.generate.DBConnectionGetter;
-import com.wwh.whwtools.generate.DBMetaDataGetter;
-import com.wwh.whwtools.generate.entity.ColumnEntity;
-import com.wwh.whwtools.generate.entity.TableEntity;
-import com.wwh.whwtools.generate.impl.MySqlConnectionGetter;
+import com.wwh.whwtools.generator.DBConnectionGetter;
+import com.wwh.whwtools.generator.DBMetaDataGetter;
+import com.wwh.whwtools.generator.entity.ColumnEntity;
+import com.wwh.whwtools.generator.entity.TableEntity;
+import com.wwh.whwtools.generator.impl.MySqlConnectionGetter;
 import com.wwh.whwtools.swing.comm.GlassPanel;
 import com.wwh.whwtools.swing.comm.MySwingWorker;
 import com.wwh.whwtools.swing.comm.table.ColorRowTable;

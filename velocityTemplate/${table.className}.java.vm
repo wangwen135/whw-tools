@@ -1,0 +1,45 @@
+package ${packageNameDomain}.domain;
+
+import java.io.Serializable;
+#foreach ($class in ${table.importClass})
+import ${class};
+#end
+
+/**
+ * <pre>
+ * ${table.remark}
+ * hinge.${table.name}
+ * </pre>
+ *
+ * @author ${author}
+ * @date ${date2}
+ *
+ */
+public class ${table.className} implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($col in ${table.columns})
+    /**
+     * ${col.comments} - ${table.name}.${col.name}
+     */
+    private ${col.javaClassName} ${col.property};
+
+#end
+#foreach ($col in ${table.columns})
+    /**
+     * 获取 ${col.comments}
+     */
+    public ${col.javaClassName} ${col.javaGetMethod}() {
+        return ${col.property};
+    }
+
+    /**
+     * 设置 ${col.comments}
+     */
+    public void ${col.javaSetMethod}(${col.javaClassName} ${col.property}) {
+        this.${col.property} = ${col.property};
+    }
+
+#end
+}

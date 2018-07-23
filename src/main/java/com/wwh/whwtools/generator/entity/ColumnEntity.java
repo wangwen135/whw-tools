@@ -1,6 +1,6 @@
-package com.wwh.whwtools.generate.entity;
+package com.wwh.whwtools.generator.entity;
 
-import com.wwh.whwtools.generate.GenerateHelp;
+import com.wwh.whwtools.generator.GenerateHelp;
 
 /**
  * <pre>

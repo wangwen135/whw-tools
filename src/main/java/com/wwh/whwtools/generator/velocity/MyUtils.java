@@ -1,4 +1,4 @@
-package com.wwh.whwtools.generate.velocity;
+package com.wwh.whwtools.generator.velocity;
 
 import org.apache.commons.lang.StringUtils;
 

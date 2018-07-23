@@ -1,11 +1,11 @@
-package com.wwh.whwtools.generate.entity;
+package com.wwh.whwtools.generator.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.wwh.whwtools.generate.GenerateHelp;
+import com.wwh.whwtools.generator.GenerateHelp;
 
 /**
  * <pre>
