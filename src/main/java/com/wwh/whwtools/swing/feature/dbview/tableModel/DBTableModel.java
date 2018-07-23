@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.wwh.whwtools.generate.entity.TableEntity;
+import com.wwh.whwtools.generator.entity.TableEntity;
 
 /**
  * <pre>

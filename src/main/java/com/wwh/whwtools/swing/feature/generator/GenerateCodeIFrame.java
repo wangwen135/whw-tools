@@ -1,7 +1,8 @@
-package com.wwh.whwtools.swing.feature.generate;
+package com.wwh.whwtools.swing.feature.generator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -16,6 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,17 +59,19 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wwh.whwtools.generate.DBConnectionGetter;
-import com.wwh.whwtools.generate.DBMetaDataGetter;
-import com.wwh.whwtools.generate.entity.ColumnEntity;
-import com.wwh.whwtools.generate.entity.TableEntity;
-import com.wwh.whwtools.generate.impl.MySqlConnectionGetter;
-import com.wwh.whwtools.generate.velocity.MyUtils;
+import com.wwh.whwtools.constant.ProjectConstant;
+import com.wwh.whwtools.generator.DBConnectionGetter;
+import com.wwh.whwtools.generator.DBMetaDataGetter;
+import com.wwh.whwtools.generator.GenerateHelp;
+import com.wwh.whwtools.generator.entity.ColumnEntity;
+import com.wwh.whwtools.generator.entity.TableEntity;
+import com.wwh.whwtools.generator.impl.MySqlConnectionGetter;
+import com.wwh.whwtools.generator.velocity.MyUtils;
 import com.wwh.whwtools.swing.comm.GlassPanel;
 import com.wwh.whwtools.swing.comm.MySwingWorker;
 import com.wwh.whwtools.swing.comm.table.ColorRowTable;
-import com.wwh.whwtools.swing.feature.generate.tableModel.DBTableModel;
-import com.wwh.whwtools.swing.feature.generate.tableModel.TableTableModel;
+import com.wwh.whwtools.swing.feature.generator.tableModel.DBTableModel;
+import com.wwh.whwtools.swing.feature.generator.tableModel.TableTableModel;
 import com.wwh.whwtools.swing.frame.BaseJInternalFrame;
 
 /**
@@ -452,7 +457,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_generate.add(txt_destDIR, gbc_txt_destDIR);
         txt_destDIR.setColumns(10);
 
-        JButton btn_desc = new JButton("选择");
+        JButton btn_desc = new JButton("选择文件");
         btn_desc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // 选择目标目录
@@ -475,7 +480,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         gbc_btn_desc.gridy = 0;
         panel_generate.add(btn_desc, gbc_btn_desc);
 
-        JLabel label_10 = new JLabel("编码：");
+        JLabel label_10 = new JLabel("文件编码：");
         GridBagConstraints gbc_label_10 = new GridBagConstraints();
         gbc_label_10.anchor = GridBagConstraints.EAST;
         gbc_label_10.insets = new Insets(0, 0, 5, 5);
@@ -492,12 +497,18 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         gbc_cbox_encoding.gridy = 1;
         panel_generate.add(cbox_encoding, gbc_cbox_encoding);
 
-        JButton btnJava = new JButton("JAVA类型映射");
-        GridBagConstraints gbc_btnJava = new GridBagConstraints();
-        gbc_btnJava.insets = new Insets(0, 0, 5, 5);
-        gbc_btnJava.gridx = 2;
-        gbc_btnJava.gridy = 1;
-        panel_generate.add(btnJava, gbc_btnJava);
+        JButton btn_javaMapping = new JButton("JAVA类型映射");
+        btn_javaMapping.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "JAVA类型映射");
+            }
+        });
+        GridBagConstraints gbc_btn_javaMapping = new GridBagConstraints();
+        gbc_btn_javaMapping.anchor = GridBagConstraints.EAST;
+        gbc_btn_javaMapping.insets = new Insets(0, 0, 5, 5);
+        gbc_btn_javaMapping.gridx = 2;
+        gbc_btn_javaMapping.gridy = 1;
+        panel_generate.add(btn_javaMapping, gbc_btn_javaMapping);
 
         JButton btn_explain = new JButton("模板变量说明");
         btn_explain.addActionListener(new ActionListener() {
@@ -506,11 +517,29 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             }
         });
         GridBagConstraints gbc_btn_explain = new GridBagConstraints();
-        gbc_btn_explain.gridwidth = 2;
         gbc_btn_explain.insets = new Insets(0, 0, 5, 5);
         gbc_btn_explain.gridx = 3;
         gbc_btn_explain.gridy = 1;
         panel_generate.add(btn_explain, gbc_btn_explain);
+
+        JButton btn_usage = new JButton("使用说明(WEB)");
+        btn_usage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI(ProjectConstant.GITHUB_WIKI));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        GridBagConstraints gbc_btn_usage = new GridBagConstraints();
+        gbc_btn_usage.anchor = GridBagConstraints.WEST;
+        gbc_btn_usage.insets = new Insets(0, 0, 5, 5);
+        gbc_btn_usage.gridx = 4;
+        gbc_btn_usage.gridy = 1;
+        panel_generate.add(btn_usage, gbc_btn_usage);
 
         ckBox_hide = new JCheckBox("隐藏表字段：");
         ckBox_hide.addActionListener(new ActionListener() {
@@ -567,12 +596,48 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         txta_customVar.setText("author = wwh\r\npackageName = com.wwh.tools");
         scrollPane_1.setViewportView(txta_customVar);
 
+        JLabel lbl_rmTbPrefix = new JLabel("去除表名前缀：");
+        GridBagConstraints gbc_lbl_rmTbPrefix = new GridBagConstraints();
+        gbc_lbl_rmTbPrefix.anchor = GridBagConstraints.EAST;
+        gbc_lbl_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_lbl_rmTbPrefix.gridx = 0;
+        gbc_lbl_rmTbPrefix.gridy = 4;
+        panel_generate.add(lbl_rmTbPrefix, gbc_lbl_rmTbPrefix);
+
+        txt_rmTbPrefix = new JTextField();
+        GridBagConstraints gbc_txt_rmTbPrefix = new GridBagConstraints();
+        gbc_txt_rmTbPrefix.gridwidth = 2;
+        gbc_txt_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_txt_rmTbPrefix.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txt_rmTbPrefix.gridx = 1;
+        gbc_txt_rmTbPrefix.gridy = 4;
+        panel_generate.add(txt_rmTbPrefix, gbc_txt_rmTbPrefix);
+        txt_rmTbPrefix.setColumns(10);
+
+        JLabel lbl_rmFdPrefix = new JLabel("去除字段前缀：");
+        GridBagConstraints gbc_lbl_rmFdPrefix = new GridBagConstraints();
+        gbc_lbl_rmFdPrefix.anchor = GridBagConstraints.EAST;
+        gbc_lbl_rmFdPrefix.insets = new Insets(0, 0, 5, 5);
+        gbc_lbl_rmFdPrefix.gridx = 3;
+        gbc_lbl_rmFdPrefix.gridy = 4;
+        panel_generate.add(lbl_rmFdPrefix, gbc_lbl_rmFdPrefix);
+
+        txt_rmFdPrefix = new JTextField();
+        GridBagConstraints gbc_txt_rmFdPrefix = new GridBagConstraints();
+        gbc_txt_rmFdPrefix.gridwidth = 2;
+        gbc_txt_rmFdPrefix.insets = new Insets(0, 0, 5, 0);
+        gbc_txt_rmFdPrefix.fill = GridBagConstraints.HORIZONTAL;
+        gbc_txt_rmFdPrefix.gridx = 4;
+        gbc_txt_rmFdPrefix.gridy = 4;
+        panel_generate.add(txt_rmFdPrefix, gbc_txt_rmFdPrefix);
+        txt_rmFdPrefix.setColumns(10);
+
         JLabel label_9 = new JLabel("生成文件名模板：");
         GridBagConstraints gbc_label_9 = new GridBagConstraints();
         gbc_label_9.anchor = GridBagConstraints.EAST;
         gbc_label_9.insets = new Insets(0, 0, 5, 5);
         gbc_label_9.gridx = 0;
-        gbc_label_9.gridy = 4;
+        gbc_label_9.gridy = 5;
         panel_generate.add(label_9, gbc_label_9);
 
         txt_fileNameTemplate = new JTextField();
@@ -580,11 +645,11 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         txt_fileNameTemplate
                 .setToolTipText("<html>\r\n自动计算文件名<br>\r\n在模板中通过：<br>\r\n${fileNameAll}       可获取完整文件名<br>\r\n${fileName}           可获取文件名<br>\r\n#{fileNameSuffix}   获取文件后缀<br>\r\n</html>");
         GridBagConstraints gbc_txt_fileNameTemplate = new GridBagConstraints();
-        gbc_txt_fileNameTemplate.gridwidth = 4;
+        gbc_txt_fileNameTemplate.gridwidth = 3;
         gbc_txt_fileNameTemplate.insets = new Insets(0, 0, 5, 5);
         gbc_txt_fileNameTemplate.fill = GridBagConstraints.HORIZONTAL;
         gbc_txt_fileNameTemplate.gridx = 1;
-        gbc_txt_fileNameTemplate.gridy = 4;
+        gbc_txt_fileNameTemplate.gridy = 5;
         panel_generate.add(txt_fileNameTemplate, gbc_txt_fileNameTemplate);
         txt_fileNameTemplate.setColumns(10);
 
@@ -596,32 +661,48 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             }
         });
         GridBagConstraints gbc_btn_testFileName = new GridBagConstraints();
-        gbc_btn_testFileName.insets = new Insets(0, 0, 5, 0);
-        gbc_btn_testFileName.gridx = 5;
-        gbc_btn_testFileName.gridy = 4;
+        gbc_btn_testFileName.insets = new Insets(0, 0, 5, 5);
+        gbc_btn_testFileName.gridx = 4;
+        gbc_btn_testFileName.gridy = 5;
         panel_generate.add(btn_testFileName, gbc_btn_testFileName);
+
+        ckBox_coverFileName = new JCheckBox("覆盖文件名");
+        ckBox_coverFileName.setToolTipText("以模板文件名.vm之前的内容覆盖文件名");
+        ckBox_coverFileName.setSelected(true);
+        GridBagConstraints gbc_ckBox_coverFileName = new GridBagConstraints();
+        gbc_ckBox_coverFileName.insets = new Insets(0, 0, 5, 0);
+        gbc_ckBox_coverFileName.gridx = 5;
+        gbc_ckBox_coverFileName.gridy = 5;
+        panel_generate.add(ckBox_coverFileName, gbc_ckBox_coverFileName);
 
         JLabel lblDo = new JLabel("模板文件：");
         GridBagConstraints gbc_lblDo = new GridBagConstraints();
         gbc_lblDo.anchor = GridBagConstraints.EAST;
         gbc_lblDo.insets = new Insets(0, 0, 5, 5);
         gbc_lblDo.gridx = 0;
-        gbc_lblDo.gridy = 5;
+        gbc_lblDo.gridy = 6;
         panel_generate.add(lblDo, gbc_lblDo);
 
         txt_vmFile = new JTextField();
         txt_vmFile.setBackground(Color.WHITE);
         txt_vmFile.setEditable(false);
         GridBagConstraints gbc_txt_vmFile = new GridBagConstraints();
-        gbc_txt_vmFile.gridwidth = 3;
+        gbc_txt_vmFile.gridwidth = 4;
         gbc_txt_vmFile.insets = new Insets(0, 0, 5, 5);
         gbc_txt_vmFile.fill = GridBagConstraints.HORIZONTAL;
         gbc_txt_vmFile.gridx = 1;
-        gbc_txt_vmFile.gridy = 5;
+        gbc_txt_vmFile.gridy = 6;
         panel_generate.add(txt_vmFile, gbc_txt_vmFile);
         txt_vmFile.setColumns(10);
 
-        JButton btn_selectVMFile = new JButton("选择模板");
+        JButton btn_generateAll = new JButton("生成左侧勾选的表");
+        btn_generateAll.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                generateAllFile();
+            }
+        });
+
+        JButton btn_selectVMFile = new JButton("选择模板文件");
         btn_selectVMFile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String dovm = txt_vmFile.getText();
@@ -640,62 +721,10 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             }
         });
         GridBagConstraints gbc_btn_selectVMFile = new GridBagConstraints();
-        gbc_btn_selectVMFile.insets = new Insets(0, 0, 5, 5);
-        gbc_btn_selectVMFile.gridx = 4;
-        gbc_btn_selectVMFile.gridy = 5;
+        gbc_btn_selectVMFile.insets = new Insets(0, 0, 5, 0);
+        gbc_btn_selectVMFile.gridx = 5;
+        gbc_btn_selectVMFile.gridy = 6;
         panel_generate.add(btn_selectVMFile, gbc_btn_selectVMFile);
-
-        ckBox_coverFileName = new JCheckBox("覆盖文件名");
-        ckBox_coverFileName.setToolTipText("以模板文件名.vm之前的内容覆盖文件名");
-        ckBox_coverFileName.setSelected(true);
-        GridBagConstraints gbc_ckBox_coverFileName = new GridBagConstraints();
-        gbc_ckBox_coverFileName.insets = new Insets(0, 0, 5, 0);
-        gbc_ckBox_coverFileName.gridx = 5;
-        gbc_ckBox_coverFileName.gridy = 5;
-        panel_generate.add(ckBox_coverFileName, gbc_ckBox_coverFileName);
-
-        JButton btn_generateAll = new JButton("生成左侧勾选的表");
-        btn_generateAll.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                generateAllFile();
-            }
-        });
-
-        JLabel lbl_rmTbPrefix = new JLabel("去除表名前缀：");
-        GridBagConstraints gbc_lbl_rmTbPrefix = new GridBagConstraints();
-        gbc_lbl_rmTbPrefix.anchor = GridBagConstraints.EAST;
-        gbc_lbl_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
-        gbc_lbl_rmTbPrefix.gridx = 0;
-        gbc_lbl_rmTbPrefix.gridy = 6;
-        panel_generate.add(lbl_rmTbPrefix, gbc_lbl_rmTbPrefix);
-
-        txt_rmTbPrefix = new JTextField();
-        GridBagConstraints gbc_txt_rmTbPrefix = new GridBagConstraints();
-        gbc_txt_rmTbPrefix.gridwidth = 2;
-        gbc_txt_rmTbPrefix.insets = new Insets(0, 0, 5, 5);
-        gbc_txt_rmTbPrefix.fill = GridBagConstraints.HORIZONTAL;
-        gbc_txt_rmTbPrefix.gridx = 1;
-        gbc_txt_rmTbPrefix.gridy = 6;
-        panel_generate.add(txt_rmTbPrefix, gbc_txt_rmTbPrefix);
-        txt_rmTbPrefix.setColumns(10);
-
-        JLabel lbl_rmFdPrefix = new JLabel("去除字段前缀：");
-        GridBagConstraints gbc_lbl_rmFdPrefix = new GridBagConstraints();
-        gbc_lbl_rmFdPrefix.anchor = GridBagConstraints.EAST;
-        gbc_lbl_rmFdPrefix.insets = new Insets(0, 0, 5, 5);
-        gbc_lbl_rmFdPrefix.gridx = 3;
-        gbc_lbl_rmFdPrefix.gridy = 6;
-        panel_generate.add(lbl_rmFdPrefix, gbc_lbl_rmFdPrefix);
-
-        txt_rmFdPrefix = new JTextField();
-        GridBagConstraints gbc_txt_rmFdPrefix = new GridBagConstraints();
-        gbc_txt_rmFdPrefix.gridwidth = 2;
-        gbc_txt_rmFdPrefix.insets = new Insets(0, 0, 5, 5);
-        gbc_txt_rmFdPrefix.fill = GridBagConstraints.HORIZONTAL;
-        gbc_txt_rmFdPrefix.gridx = 4;
-        gbc_txt_rmFdPrefix.gridy = 6;
-        panel_generate.add(txt_rmFdPrefix, gbc_txt_rmFdPrefix);
-        txt_rmFdPrefix.setColumns(10);
         GridBagConstraints gbc_btn_generateAll = new GridBagConstraints();
         gbc_btn_generateAll.gridwidth = 2;
         gbc_btn_generateAll.insets = new Insets(0, 0, 0, 5);
@@ -703,7 +732,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         gbc_btn_generateAll.gridy = 7;
         panel_generate.add(btn_generateAll, gbc_btn_generateAll);
 
-        JButton btn_generate = new JButton("生成选中表");
+        JButton btn_generate = new JButton("生成当前选中的表");
         btn_generate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 generateOneFile();
@@ -914,7 +943,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         // 指定一个空的绝对路径
         ve.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "");
 
-        // 因为编码会编所以就不能缓存了
+        // 因为编码会变所以就不能缓存了
         ve.setProperty(RuntimeConstants.INPUT_ENCODING, cbox_encoding.getSelectedItem().toString());
 
         ve.init();
@@ -1082,6 +1111,45 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         }
 
         return map;
+    }
+
+    /**
+     * 移除表名前缀
+     * 
+     * @param tableEntity
+     * @param prefix
+     * @return
+     * @throws Exception
+     */
+    public TableEntity removeTablePrefix(TableEntity tableEntity, String prefix) throws Exception {
+        if (prefix != null && !"".equals(prefix)) {
+            String name = tableEntity.getName();
+            if (name.startsWith(prefix)) {
+                String newName = name.substring(prefix.length());
+                if (newName.startsWith("_")) {
+                    newName = newName.substring(1);
+                }
+                TableEntity tableEntity2 = tableEntity.clone();
+                // tableEntity2.setName(newName); name保持不变，只改变计算后的类名
+                tableEntity2.setClassName(GenerateHelp.getClassNameByTableName(newName));
+
+                return tableEntity2;
+            }
+        }
+        return tableEntity;
+    }
+
+    public TableEntity removeTableColumnPrefxi(TableEntity tableEntity, String prefix) throws Exception {
+        if (prefix != null && !"".equals(prefix)) {
+            TableEntity te2 = tableEntity.clone();
+            List<ColumnEntity> clist = te2.getColumns();
+            for (ColumnEntity ce : clist) {
+                // TODO 未完成的
+            }
+
+        }
+
+        return tableEntity;
     }
 
     /**

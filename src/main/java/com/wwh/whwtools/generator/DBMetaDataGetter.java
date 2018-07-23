@@ -1,4 +1,4 @@
-package com.wwh.whwtools.generate;
+package com.wwh.whwtools.generator;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -10,8 +10,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.wwh.whwtools.generate.entity.ColumnEntity;
-import com.wwh.whwtools.generate.entity.TableEntity;
+import com.wwh.whwtools.generator.entity.ColumnEntity;
+import com.wwh.whwtools.generator.entity.TableEntity;
 
 /**
  * <pre>
