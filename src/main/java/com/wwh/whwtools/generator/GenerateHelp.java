@@ -1,7 +1,9 @@
 package com.wwh.whwtools.generator;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import com.wwh.whwtools.generator.entity.ColumnEntity;
+import com.wwh.whwtools.generator.entity.TableEntity;
 
 /**
  * <pre>
@@ -13,53 +15,6 @@ import java.util.Map;
  *
  */
 public class GenerateHelp {
-    /**
-     * <pre>
-     * 数据库类型
-     * mysql
-     * </pre>
-     */
-    public static enum DBType {
-        MYSQL
-    }
-
-    /**
-     * 数据库类型到java类型映射
-     */
-    public static final Map<String, String> javaTypeMap = new HashMap<String, String>();
-    static {
-        javaTypeMap.put("VARCHAR", "java.lang.String");
-        javaTypeMap.put("CHAR", "java.lang.String");
-        javaTypeMap.put("BIGINT", "java.lang.Long");
-        javaTypeMap.put("INT", "java.lang.Integer");
-        javaTypeMap.put("TINYINT", "java.lang.Integer");
-        javaTypeMap.put("SMALLINT", "java.lang.Integer");
-        javaTypeMap.put("MEDIUMINT", "java.lang.Integer");
-        javaTypeMap.put("DECIMAL", "java.math.BigDecimal");
-
-        javaTypeMap.put("DATETIME", "java.util.Date");
-        javaTypeMap.put("DATE", "java.util.Date");
-        // ######
-        javaTypeMap.put("TIMESTAMP", "java.util.Date");
-        javaTypeMap.put("BIT", "java.lang.Boolean");
-        javaTypeMap.put("FLOAT", "java.lang.Float");
-        javaTypeMap.put("DOUBLE", "java.lang.Double");
-        javaTypeMap.put("BLOB", "java.lang.byte[]");
-        javaTypeMap.put("TEXT", "java.lang.String");
-        javaTypeMap.put("LONGTEXT", "java.lang.String");
-        javaTypeMap.put("MEDIUMTEXT", "java.lang.String");
-    }
-
-    /**
-     * 数据库类型到Mybatis jdbcType 映射
-     */
-    public static final Map<String, String> mybatisJdbcTypeMap = new HashMap<String, String>();
-    static {
-        mybatisJdbcTypeMap.put("INT", "INTEGER");
-        mybatisJdbcTypeMap.put("DATETIME", "TIMESTAMP");
-        mybatisJdbcTypeMap.put("DATETIME", "TIMESTAMP");
-        mybatisJdbcTypeMap.put("TEXT", "VARCHAR");
-    }
 
     /**
      * 将数据库中的类型 转换成 Mybatis中的jdbcType
@@ -73,12 +28,13 @@ public class GenerateHelp {
             return dbType;
         }
         dbType = dbType.toUpperCase();
-        String mbType = mybatisJdbcTypeMap.get(dbType);
+        String mbType = GeneratorConstant.DB_TO_MYBATIS_MAPPING.get(dbType);
         return mbType == null ? dbType : mbType;
     }
 
     /**
-     * 根据数据库类型 获取 java 类型
+     * 根据数据库类型 获取 java 类型 <br/>
+     * 通过映射表实现，如果没有配置映射就返回数据库中定义的type
      * 
      * @param dbType
      *            数据库类型
@@ -90,19 +46,22 @@ public class GenerateHelp {
             throw new IllegalArgumentException("dbType 不能为空");
         }
         dbType = dbType.toUpperCase();
-        String javaClass = javaTypeMap.get(dbType);
-        if (javaClass == null)
+        String javaClass = GeneratorConstant.DB_TO_MYBATIS_MAPPING.get(dbType);
+        if (javaClass == null) {
+            // 可以考虑返回Object？
             throw new IllegalArgumentException("错误或不支持的数据库类型：" + dbType);
-        else
+        } else {
             return javaClass;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getJavaTypeByDBType("varchar"));
+        }
     }
 
     /**
+     * <pre>
      * 根据表名获取java类名
+     * 如：
+     * user  -->  User
+     * user_group  -->  userGroup
+     * </pre>
      * 
      * @param tableName
      * @return
@@ -124,7 +83,12 @@ public class GenerateHelp {
     }
 
     /**
+     * <pre>
      * 根据字段名获取属性名
+     * 如：
+     * user_id  -->  userId
+     * user_group_id  -->  userGroupId
+     * </pre>
      * 
      * @return
      */
@@ -146,6 +110,61 @@ public class GenerateHelp {
             }
         }
         return sbf.toString();
+    }
+
+    /**
+     * 移除表名前缀<br/>
+     * 只处理ClassName
+     * 
+     * @param tableEntity
+     * @param prefix
+     * @return 如果包含前缀返回的是克隆后的对象
+     * @throws Exception
+     */
+    public static TableEntity removeTablePrefix(TableEntity tableEntity, String prefix) throws Exception {
+        if (prefix != null && !"".equals(prefix)) {
+            String name = tableEntity.getName();
+            // 全部转大写后匹配
+            if (name.toUpperCase().startsWith(prefix.toUpperCase())) {
+                String newName = name.substring(prefix.length());
+                if (newName.startsWith("_")) {
+                    newName = newName.substring(1);
+                }
+                TableEntity tableEntity2 = tableEntity.clone();
+                tableEntity2.setClassName(GenerateHelp.getClassNameByTableName(newName));
+                return tableEntity2;
+            }
+        }
+        return tableEntity;
+    }
+
+    /**
+     * 移除字段前缀<br/>
+     * 处理所有字段的Property属性
+     * 
+     * @param tableEntity
+     * @param prefix
+     * @return 返回克隆后经过处理的Entity对象
+     * @throws Exception
+     */
+    public static TableEntity removeTableColumnPrefxi(TableEntity tableEntity, String prefix) throws Exception {
+        if (prefix != null && !"".equals(prefix)) {
+            TableEntity te2 = tableEntity.clone();
+            List<ColumnEntity> clist = te2.getColumns();
+            for (ColumnEntity ce : clist) {
+                String colName = ce.getName();
+                // 全部转大写后匹配
+                if (colName.toUpperCase().startsWith(prefix.toUpperCase())) {
+                    String newName = colName.substring(prefix.length());
+                    if (newName.startsWith("_")) {
+                        newName = newName.substring(1);
+                    }
+                    ce.setProperty(GenerateHelp.getPropertyByColumn(newName));
+                }
+            }
+            return te2;
+        }
+        return tableEntity;
     }
 
 }
