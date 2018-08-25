@@ -428,7 +428,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_right_buttom.add(txt_tableRemark, gbc_txt_tableRemark);
 
         JPanel panel_generate = new JPanel();
-        panel_generate.setBorder(new TitledBorder(null, "\u8BBE\u7F6E\u533A\u57DF", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panel_generate.setBorder(new TitledBorder(null, "\u8BBE\u7F6E\u533A\u57DF", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
         panel_right_top.add(panel_generate, BorderLayout.CENTER);
         GridBagLayout gbl_panel_generate = new GridBagLayout();
         gbl_panel_generate.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -578,8 +579,10 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         txta_hide = new JTextArea();
         txta_hide.setEnabled(false);
-        txta_hide.setToolTipText("<html>\r\n被隐藏的字段不会出现在${table.columns}集合中<br>\r\n一行表示一个字段，可以使用列名 或 对应的java属性名\r\n</html>");
-        txta_hide.setText("createTime\r\ncreateUserId\r\nmodifyTime\r\nmodifyUserId\r\ndeleteTime\r\ndeleteUserId\r\noptions\r\nversion");
+        txta_hide
+                .setToolTipText("<html>\r\n被隐藏的字段不会出现在${table.columns}集合中<br>\r\n一行表示一个字段，可以使用列名 或 对应的java属性名\r\n</html>");
+        txta_hide
+                .setText("createTime\r\ncreateUserId\r\nmodifyTime\r\nmodifyUserId\r\ndeleteTime\r\ndeleteUserId\r\noptions\r\nversion");
         scrollPane.setViewportView(txta_hide);
 
         JScrollPane scrollPane_1 = new JScrollPane();
@@ -829,7 +832,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         } catch (Exception ex) {
             log.error("连接数据库异常", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, ex.getMessage(), "连接数据库异常\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, ex.getMessage(), "连接数据库异常\n" + ex.getMessage(),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -883,7 +887,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
                     clearSelectTable();
                 } catch (Exception e1) {
                     log.error("获取数据库表信息异常", e1);
-                    JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取数据库表信息异常", "错误", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取数据库表信息异常", "错误",
+                            JOptionPane.ERROR_MESSAGE);
                 } finally {
                     glassPanel.setVisible(false);// 关闭玻璃面板
                 }
@@ -1113,44 +1118,6 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         return map;
     }
 
-    /**
-     * 移除表名前缀
-     * 
-     * @param tableEntity
-     * @param prefix
-     * @return
-     * @throws Exception
-     */
-    public TableEntity removeTablePrefix(TableEntity tableEntity, String prefix) throws Exception {
-        if (prefix != null && !"".equals(prefix)) {
-            String name = tableEntity.getName();
-            if (name.startsWith(prefix)) {
-                String newName = name.substring(prefix.length());
-                if (newName.startsWith("_")) {
-                    newName = newName.substring(1);
-                }
-                TableEntity tableEntity2 = tableEntity.clone();
-                // tableEntity2.setName(newName); name保持不变，只改变计算后的类名
-                tableEntity2.setClassName(GenerateHelp.getClassNameByTableName(newName));
-
-                return tableEntity2;
-            }
-        }
-        return tableEntity;
-    }
-
-    public TableEntity removeTableColumnPrefxi(TableEntity tableEntity, String prefix) throws Exception {
-        if (prefix != null && !"".equals(prefix)) {
-            TableEntity te2 = tableEntity.clone();
-            List<ColumnEntity> clist = te2.getColumns();
-            for (ColumnEntity ce : clist) {
-                // TODO 未完成的
-            }
-
-        }
-
-        return tableEntity;
-    }
 
     /**
      * 生成一个文件
@@ -1182,7 +1149,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             fileName = evaluateFileName(vct, fileNameT);
         } catch (Exception ex) {
             log.error("计算文件异常", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "计算文件名异常\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "计算文件名异常\n" + ex.getMessage(), "错误",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1197,7 +1165,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             t = ve.getTemplate(selectVMFile.getAbsolutePath());
         } catch (Exception ex) {
             log.error("获取模板文件错误", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取模板文件错误\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取模板文件错误\n" + ex.getMessage(), "错误",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1217,7 +1186,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         } catch (Exception ex) {
             log.error("生成代码文件异常", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "生成代码文件异常\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "生成代码文件异常\n" + ex.getMessage(), "错误",
+                    JOptionPane.ERROR_MESSAGE);
         } finally {
             if (writer != null && !b)
                 try {
@@ -1304,7 +1274,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             t = ve.getTemplate(selectVMFile.getAbsolutePath());
         } catch (Exception ex) {
             log.error("获取模板文件错误", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取模板文件错误\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取模板文件错误\n" + ex.getMessage(), "错误",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1325,7 +1296,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
                 tableEntity2 = filterTableEntity(te);
             } catch (Exception e) {
                 log.error("对象属性过滤异常，表：" + te.getName(), e);
-                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性过滤异常，表：" + te.getName(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性过滤异常，表：" + te.getName(), "错误",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -1336,7 +1308,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
                 fileName = evaluateFileName(vct, fileNameT);
             } catch (Exception ex) {
                 log.error("计算文件异常，表：" + te.getName(), ex);
-                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "计算文件名异常，表：" + te.getName() + "\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(GenerateCodeIFrame.this,
+                        "计算文件名异常，表：" + te.getName() + "\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -1349,7 +1322,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             boolean b = false;
             try {
                 // 指定编码
-                writer = new OutputStreamWriter(new FileOutputStream(descFile), cbox_encoding.getSelectedItem().toString());
+                writer = new OutputStreamWriter(new FileOutputStream(descFile), cbox_encoding.getSelectedItem()
+                        .toString());
 
                 // writer = new FileWriter(descFile);
                 t.merge(context, writer);
@@ -1359,7 +1333,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
             } catch (Exception ex) {
                 log.error("生成代码文件异常，表：" + te.getName(), ex);
-                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "生成代码文件异常，表：" + te.getName() + "\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(GenerateCodeIFrame.this,
+                        "生成代码文件异常，表：" + te.getName() + "\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
                 return;
             } finally {
                 if (writer != null && !b)
@@ -1406,7 +1381,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, fileName);
         } catch (Exception ex) {
             log.error("计算文件异常", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "计算文件名异常\n" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "计算文件名异常\n" + ex.getMessage(), "错误",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

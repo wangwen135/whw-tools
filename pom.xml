@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wwh.whwtools</groupId>
 	<artifactId>WHWTools</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<properties>
 		<!-- 这里定义的属性可以直接在资源文件中引用，无需逐个修改。 e.g : ${spring.version} -->
