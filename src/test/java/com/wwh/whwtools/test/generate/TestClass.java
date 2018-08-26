@@ -2,9 +2,9 @@ package com.wwh.whwtools.test.generate;
 
 import java.util.List;
 
-import com.wwh.whwtools.generate.DBMetaDataGetter;
-import com.wwh.whwtools.generate.entity.TableEntity;
-import com.wwh.whwtools.generate.impl.MySqlConnectionGetter;
+import com.wwh.whwtools.generator.DBMetaDataGetter;
+import com.wwh.whwtools.generator.entity.TableEntity;
+import com.wwh.whwtools.generator.impl.MySqlConnectionGetter;
 
 /**
  * <pre>

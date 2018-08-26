@@ -2,7 +2,7 @@ package com.wwh.whwtools.swing.comm;
 
 import javax.swing.SwingWorker;
 
-import com.wwh.whwtools.generate.MessagePublisher;
+import com.wwh.whwtools.generator.MessagePublisher;
 
 /**
  * <pre>

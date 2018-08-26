@@ -39,7 +39,7 @@ import com.wwh.whwtools.swing.feature.digest.MD5IFrame;
 import com.wwh.whwtools.swing.feature.digest.SHA1IFrame;
 import com.wwh.whwtools.swing.feature.encrypt.AES128IFrame;
 import com.wwh.whwtools.swing.feature.file.FileAppendIFrame;
-import com.wwh.whwtools.swing.feature.generate.GenerateCodeIFrame;
+import com.wwh.whwtools.swing.feature.generator.GenerateCodeIFrame;
 
 /**
  * <pre>

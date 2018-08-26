@@ -1,10 +1,10 @@
-package com.wwh.whwtools.swing.feature.generate.tableModel;
+package com.wwh.whwtools.swing.feature.generator.tableModel;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.wwh.whwtools.generate.entity.ColumnEntity;
+import com.wwh.whwtools.generator.entity.ColumnEntity;
 
 /**
  * <pre>

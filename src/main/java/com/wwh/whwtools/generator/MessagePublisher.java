@@ -1,4 +1,4 @@
-package com.wwh.whwtools.generate;
+package com.wwh.whwtools.generator;
 
 /**
  * <pre>

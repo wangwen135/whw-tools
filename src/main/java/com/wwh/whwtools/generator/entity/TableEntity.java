@@ -1,15 +1,16 @@
-package com.wwh.whwtools.generate.entity;
+package com.wwh.whwtools.generator.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.wwh.whwtools.generate.GenerateHelp;
+import com.wwh.whwtools.generator.GenerateHelp;
 
 /**
  * <pre>
- * 表 实体对象
+ * 数据库表 对应的实体对象
+ * 其中包含了列实体对象
  * </pre>
  *
  * @author wwh
@@ -48,16 +49,17 @@ public class TableEntity implements Cloneable {
      */
     private List<ColumnEntity> columns;
 
-    // ###################################################################
-
     /**
      * 对象克隆
      */
+    @Override
     public TableEntity clone() throws CloneNotSupportedException {
         TableEntity te = (TableEntity) super.clone();
         if (columns != null) {
             List<ColumnEntity> list = new ArrayList<ColumnEntity>();
-            list.addAll(getColumns());
+            for (ColumnEntity columnEntity : getColumns()) {
+                list.add(columnEntity.clone());
+            }
             te.setColumns(list);
         }
         return te;
@@ -76,7 +78,6 @@ public class TableEntity implements Cloneable {
                 set.add(type);
             }
         }
-
         return set;
     }
 
@@ -170,7 +171,10 @@ public class TableEntity implements Cloneable {
      * @return
      */
     public ColumnEntity getColumn(int index) {
-        return columns.get(index);
+        if (index < getColumnCount()) {
+            return columns.get(index);
+        }
+        return null;
     }
 
     /**
@@ -188,11 +192,10 @@ public class TableEntity implements Cloneable {
         return null;
     }
 
-    // ###################################################################
-
     @Override
     public String toString() {
-        String s = "Table [name=" + name + ", remark=" + remark + ", shortRemark=" + shortRemark + ", columnCount=" + getColumnCount() + ", columns：";
+        String s = "Table [name=" + name + ", remark=" + remark + ", shortRemark=" + shortRemark + ", columnCount="
+                + getColumnCount() + ", columns：";
         for (ColumnEntity column : columns) {
             s += "\n";
             s += column.toString();
@@ -285,6 +288,21 @@ public class TableEntity implements Cloneable {
     public void setColumns(List<ColumnEntity> columns) {
         columns = columns == null ? new ArrayList<ColumnEntity>() : columns;
         this.columns = columns;
+    }
+
+    /**
+     * 添加列
+     * 
+     * @param col
+     */
+    public void addColumn(ColumnEntity col) {
+        if (col == null) {
+            return;
+        }
+        if (columns == null) {
+            columns = new ArrayList<ColumnEntity>();
+        }
+        columns.add(col);
     }
 
     /**

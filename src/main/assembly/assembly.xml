@@ -14,6 +14,7 @@
 			<outputDirectory>./</outputDirectory>
 			<includes>
 				<include>README.md</include>
+				<include>LICENSE</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -42,6 +43,7 @@
 			<outputDirectory>./config</outputDirectory>
 			<includes>
 				<include>*.properties</include>
+				<include>*.xml</include>
 			</includes>
 		</fileSet>
 
