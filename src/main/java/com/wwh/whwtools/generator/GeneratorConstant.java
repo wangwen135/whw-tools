@@ -35,11 +35,22 @@ public class GeneratorConstant {
 
     /**
      * <pre>
+     * 中线分隔符 '-'
+     * 
+     * </pre>
+     */
+    public static final String SEPARATOR_MIDLINE = "-";
+
+    /**
+     * <pre>
      * 数据库类型
      * mysql
      * </pre>
      */
     public static enum DBType {
+        /**
+         * MySQL数据库
+         */
         MYSQL
     }
 

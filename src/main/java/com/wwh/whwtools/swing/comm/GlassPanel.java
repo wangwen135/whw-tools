@@ -28,6 +28,8 @@ import javax.swing.SwingConstants;
 /**
  * <pre>
  * 玻璃面板
+ * 调用setVisible(boolean b) 方法会清空message
+ * 显示时会禁用键盘和鼠标操作
  * </pre>
  *
  * @author wwh
@@ -232,15 +234,17 @@ public class GlassPanel extends JPanel {
     private void disableAllKeyEvent() {
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-        awteListener = new AWTEventListener() {
+        if (awteListener == null) {
+            awteListener = new AWTEventListener() {
 
-            public void eventDispatched(AWTEvent event) {
-                if (event.getClass() == KeyEvent.class) {
-                    KeyEvent ke = (KeyEvent) event;
-                    ke.consume();
+                public void eventDispatched(AWTEvent event) {
+                    if (event.getClass() == KeyEvent.class) {
+                        KeyEvent ke = (KeyEvent) event;
+                        ke.consume();
+                    }
                 }
-            }
-        };
+            };
+        }
 
         toolkit.addAWTEventListener(awteListener, java.awt.AWTEvent.KEY_EVENT_MASK);
     }

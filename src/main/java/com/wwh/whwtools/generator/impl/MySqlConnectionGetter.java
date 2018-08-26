@@ -104,7 +104,7 @@ public class MySqlConnectionGetter implements DBConnectionGetter {
             Class.forName(MySqlConnectionGetter.DRIVER);
         } catch (ClassNotFoundException e) {
             log.error("数据库驱动加载失败", e);
-            throw new RuntimeException("数据库驱动加载失败", e);
+            throw new RuntimeException("数据库驱动加载失败\n" + e.getMessage(), e);
         }
 
         URL = String.format(URL_FORMAT, host, port, dbName);
@@ -121,7 +121,7 @@ public class MySqlConnectionGetter implements DBConnectionGetter {
             conn = DriverManager.getConnection(URL, props);
         } catch (SQLException e) {
             log.error("获取数据库连接异常", e);
-            throw new RuntimeException("获取数据库连接异常", e);
+            throw new RuntimeException("获取数据库连接异常\n" + e.getMessage(), e);
         }
     }
 

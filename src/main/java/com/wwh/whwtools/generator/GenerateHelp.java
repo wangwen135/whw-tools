@@ -46,7 +46,7 @@ public class GenerateHelp {
             throw new IllegalArgumentException("dbType 不能为空");
         }
         dbType = dbType.toUpperCase();
-        String javaClass = GeneratorConstant.DB_TO_MYBATIS_MAPPING.get(dbType);
+        String javaClass = GeneratorConstant.DB_TO_JAVA_MAPPING.get(dbType);
         if (javaClass == null) {
             // 可以考虑返回Object？
             throw new IllegalArgumentException("错误或不支持的数据库类型：" + dbType);
@@ -67,9 +67,9 @@ public class GenerateHelp {
      * @return
      */
     public static String getClassNameByTableName(String tableName) {
-        if (tableName == null)
+        if (tableName == null) {
             throw new IllegalArgumentException("表名不能为空");
-
+        }
         String[] cs = tableName.split(GeneratorConstant.DEFAULT_TABLE_NAME_SEPARATOR);
         StringBuffer sbf = new StringBuffer();
         for (int i = 0; i < cs.length; i++) {
@@ -93,9 +93,9 @@ public class GenerateHelp {
      * @return
      */
     public static String getPropertyByColumn(String column) {
-        if (column == null)
+        if (column == null) {
             throw new IllegalArgumentException("字段不能为空");
-
+        }
         String[] cs = column.split(GeneratorConstant.DEFAULT_TABLE_COLUMN_NAME_SEPARATOR);
         StringBuffer sbf = new StringBuffer();
         for (int i = 0; i < cs.length; i++) {
@@ -113,11 +113,14 @@ public class GenerateHelp {
     }
 
     /**
-     * 移除表名前缀<br/>
+     * <pre>
+     * 移除表名前缀
      * 只处理ClassName
+     * </pre>
      * 
      * @param tableEntity
      * @param prefix
+     *            表前缀，不区分大小写
      * @return 如果包含前缀返回的是克隆后的对象
      * @throws Exception
      */
@@ -127,7 +130,8 @@ public class GenerateHelp {
             // 全部转大写后匹配
             if (name.toUpperCase().startsWith(prefix.toUpperCase())) {
                 String newName = name.substring(prefix.length());
-                if (newName.startsWith("_")) {
+                while (newName.startsWith(GeneratorConstant.DEFAULT_TABLE_NAME_SEPARATOR)
+                        || newName.startsWith(GeneratorConstant.SEPARATOR_MIDLINE)) {
                     newName = newName.substring(1);
                 }
                 TableEntity tableEntity2 = tableEntity.clone();
@@ -139,15 +143,19 @@ public class GenerateHelp {
     }
 
     /**
-     * 移除字段前缀<br/>
+     * <pre>
+     * 移除字段前缀
      * 处理所有字段的Property属性
+     * 
+     * </pre>
      * 
      * @param tableEntity
      * @param prefix
+     *            字段前缀，不区分大小写
      * @return 返回克隆后经过处理的Entity对象
      * @throws Exception
      */
-    public static TableEntity removeTableColumnPrefxi(TableEntity tableEntity, String prefix) throws Exception {
+    public static TableEntity removeTableColumnPrefix(TableEntity tableEntity, String prefix) throws Exception {
         if (prefix != null && !"".equals(prefix)) {
             TableEntity te2 = tableEntity.clone();
             List<ColumnEntity> clist = te2.getColumns();
@@ -156,7 +164,8 @@ public class GenerateHelp {
                 // 全部转大写后匹配
                 if (colName.toUpperCase().startsWith(prefix.toUpperCase())) {
                     String newName = colName.substring(prefix.length());
-                    if (newName.startsWith("_")) {
+                    while (newName.startsWith(GeneratorConstant.DEFAULT_TABLE_COLUMN_NAME_SEPARATOR)
+                            || newName.startsWith(GeneratorConstant.SEPARATOR_MIDLINE)) {
                         newName = newName.substring(1);
                     }
                     ce.setProperty(GenerateHelp.getPropertyByColumn(newName));
@@ -167,4 +176,24 @@ public class GenerateHelp {
         return tableEntity;
     }
 
+    /**
+     * 从实体对象中移除需要隐藏的字段
+     * 
+     * @param tableEntity
+     * @param hideField
+     *            需要隐藏的字段列表
+     * @return 返回克隆后经过处理的Entity对象
+     * @throws Exception
+     */
+    public static TableEntity removeHiddenColumn(TableEntity tableEntity, List<String> hideField) throws Exception {
+        if (hideField != null && !hideField.isEmpty()) {
+            TableEntity tableEntity2 = tableEntity.clone();
+            for (String hf : hideField) {
+                // 移除属性
+                tableEntity2.removeColumn(hf);
+            }
+            return tableEntity2;
+        }
+        return tableEntity;
+    }
 }
