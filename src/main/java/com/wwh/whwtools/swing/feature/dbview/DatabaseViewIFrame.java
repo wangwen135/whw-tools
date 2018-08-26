@@ -101,7 +101,7 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label);
 
         txt_host = new JTextField();
-        txt_host.setText("192.168.1.210");
+        txt_host.setText("127.0.0.1");
         panel_conInfo.add(txt_host);
         txt_host.setColumns(15);
 
@@ -117,7 +117,7 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label_2);
 
         txt_dbName = new JTextField();
-        txt_dbName.setText("hinge");
+        txt_dbName.setText("dbName");
         panel_conInfo.add(txt_dbName);
         txt_dbName.setColumns(10);
 
@@ -140,9 +140,7 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
         JButton btn_connection = new JButton("连接");
         btn_connection.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getDBConnection();
-                if (connGetter != null)
-                    refreshDBTable();
+                getDBConnectionAndRefresh();
             }
         });
         panel_conInfo.add(btn_connection);
@@ -340,48 +338,76 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
     /**
      * 获取连接
      */
-    public void getDBConnection() {
-        String host = txt_host.getText();
+    public void getDBConnectionAndRefresh() {
+        final String host = txt_host.getText();
         if (host == null || "".equals(host)) {
             JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "地址不能为空");
             txt_host.requestFocus();
             return;
         }
-        Integer port = (Integer) ftxt_port.getValue();
+        final Integer port = (Integer) ftxt_port.getValue();
         if (port == null) {
             JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "端口不能为空");
             ftxt_port.requestFocus();
             return;
         }
 
-        String dbName = txt_dbName.getText();
+        final String dbName = txt_dbName.getText();
         if (dbName == null || "".equals(dbName)) {
             JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "数据库名不能为空");
             txt_dbName.requestFocus();
             return;
         }
 
-        String userName = txt_userName.getText();
+        final String userName = txt_userName.getText();
         if (userName == null || "".equals(userName)) {
             JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "用户名不能为空");
             txt_userName.requestFocus();
             return;
         }
 
-        String pwd = new String(txt_pwd.getPassword());
+        final String pwd = new String(txt_pwd.getPassword());
         if (pwd == null || "".equals(pwd)) {
             JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "密码不能为空");
             txt_pwd.requestFocus();
             return;
         }
+        // 开启玻璃面板
+        glassPanel.setVisible(true);
+        MySwingWorker<DBConnectionGetter> sWorker = new MySwingWorker<DBConnectionGetter>() {
 
-        try {
-            connGetter = new MySqlConnectionGetter(host, port, dbName, userName, pwd);
+            @Override
+            protected DBConnectionGetter doInBackground() throws Exception {
+                publish("正在连接数据库：" + host + ":" + port);
+                return new MySqlConnectionGetter(host, port, dbName, userName, pwd);
+            }
 
-        } catch (Exception ex) {
-            log.error("连接数据库异常", ex);
-            JOptionPane.showMessageDialog(DatabaseViewIFrame.this, ex.getMessage(), "连接数据库异常\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
+            @Override
+            protected void process(List<String> chunks) {
+                for (String string : chunks) {
+                    glassPanel.setCurrentMessage(string);
+                }
+            }
+
+            @Override
+            protected void done() {
+
+                try {
+                    connGetter = get();
+                    // 获取表信息
+                    refreshDBTable();
+                } catch (Exception ex) {
+                    log.error("连接数据库异常", ex);
+                    String errorMsg = ex.getCause() == null ? ex.getMessage() : ex.getCause().getMessage();
+                    JOptionPane.showMessageDialog(DatabaseViewIFrame.this, errorMsg, "连接数据库异常",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    // 关闭玻璃面板
+                    glassPanel.setVisible(false);
+                }
+            }
+        };
+        sWorker.execute();
     }
 
     /**
@@ -433,7 +459,8 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
                     clearSelectTable();
                 } catch (Exception e1) {
                     log.error("获取数据库表信息异常", e1);
-                    JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "获取数据库表信息异常", "错误", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "获取数据库表信息异常", "错误",
+                            JOptionPane.ERROR_MESSAGE);
                 } finally {
                     glassPanel.setVisible(false);// 关闭玻璃面板
                 }
@@ -484,8 +511,8 @@ public class DatabaseViewIFrame extends BaseJInternalFrame {
     @Override
     protected void findInFrame() {
         JOptionPane.showMessageDialog(DatabaseViewIFrame.this, "查找 ");
-        //查找--考虑一下看是否可以做出通用的？？
-        
-        //可以由一个统一的地方弹出查找窗口，然后返回一个查找对象，回调当前活动的窗口，具体动作由回调窗口决定
+        // 查找--考虑一下看是否可以做出通用的？？
+
+        // 可以由一个统一的地方弹出查找窗口，然后返回一个查找对象，回调当前活动的窗口，具体动作由回调窗口决定
     }
 }

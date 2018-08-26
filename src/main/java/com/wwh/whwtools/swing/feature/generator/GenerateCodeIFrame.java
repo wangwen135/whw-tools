@@ -163,7 +163,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         panel_conInfo.add(label);
 
         txt_host = new JTextField();
-        txt_host.setText("192.168.1.210");
+        txt_host.setText("127.0.0.1");
         panel_conInfo.add(txt_host);
         txt_host.setColumns(15);
 
@@ -202,9 +202,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         JButton btn_connection = new JButton("连接");
         btn_connection.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getDBConnection();
-                if (connGetter != null)
-                    refreshDBTable();
+                getDBConnectionAndRefresh();
             }
         });
         panel_conInfo.add(btn_connection);
@@ -761,14 +759,14 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
 
         // 注释掉这个就可以使用windowbuiler GUI插件了
         // ############ 设置玻璃面板
-        glassPanel = new GlassPanel("/image/loading1.gif");
+        glassPanel = new GlassPanel();
         setGlassPane(glassPanel);
     }
 
     /**
      * 设置表格列的首选宽度
      */
-    public void setCenterTableColumnPreferredWidth() {
+    private void setCenterTableColumnPreferredWidth() {
         table_table.getColumnModel().getColumn(0).setPreferredWidth(40);
         table_table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table_table.getColumnModel().getColumn(2).setPreferredWidth(120);
@@ -781,9 +779,9 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
     }
 
     /**
-     * 
+     * 左侧表格宽度
      */
-    public void setDBTableColumnPreferredWidth() {
+    private void setDBTableColumnPreferredWidth() {
         table_db.getColumnModel().getColumn(0).setPreferredWidth(50);
         table_db.getColumnModel().getColumn(1).setPreferredWidth(125);
         table_db.getColumnModel().getColumn(2).setPreferredWidth(135);
@@ -792,49 +790,76 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
     /**
      * 获取连接
      */
-    public void getDBConnection() {
-        String host = txt_host.getText();
+    public void getDBConnectionAndRefresh() {
+        final String host = txt_host.getText();
         if (host == null || "".equals(host)) {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "地址不能为空");
             txt_host.requestFocus();
             return;
         }
-        Integer port = (Integer) ftxt_port.getValue();
+        final Integer port = (Integer) ftxt_port.getValue();
         if (port == null) {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "端口不能为空");
             ftxt_port.requestFocus();
             return;
         }
 
-        String dbName = txt_dbName.getText();
+        final String dbName = txt_dbName.getText();
         if (dbName == null || "".equals(dbName)) {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "数据库名不能为空");
             txt_dbName.requestFocus();
             return;
         }
 
-        String userName = txt_userName.getText();
+        final String userName = txt_userName.getText();
         if (userName == null || "".equals(userName)) {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "用户名不能为空");
             txt_userName.requestFocus();
             return;
         }
 
-        String pwd = new String(txt_pwd.getPassword());
+        final String pwd = new String(txt_pwd.getPassword());
         if (pwd == null || "".equals(pwd)) {
             JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "密码不能为空");
             txt_pwd.requestFocus();
             return;
         }
+        // 开启玻璃面板
+        glassPanel.setVisible(true);
+        MySwingWorker<DBConnectionGetter> sWorker = new MySwingWorker<DBConnectionGetter>() {
 
-        try {
-            connGetter = new MySqlConnectionGetter(host, port, dbName, userName, pwd);
+            @Override
+            protected DBConnectionGetter doInBackground() throws Exception {
+                publish("正在连接数据库：" + host + ":" + port);
+                return new MySqlConnectionGetter(host, port, dbName, userName, pwd);
+            }
 
-        } catch (Exception ex) {
-            log.error("连接数据库异常", ex);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, ex.getMessage(), "连接数据库异常\n" + ex.getMessage(),
-                    JOptionPane.ERROR_MESSAGE);
-        }
+            @Override
+            protected void process(List<String> chunks) {
+                for (String string : chunks) {
+                    glassPanel.setCurrentMessage(string);
+                }
+            }
+
+            @Override
+            protected void done() {
+
+                try {
+                    connGetter = get();
+                    // 获取表信息
+                    refreshDBTable();
+                } catch (Exception ex) {
+                    log.error("连接数据库异常", ex);
+                    String errorMsg = ex.getCause() == null ? ex.getMessage() : ex.getCause().getMessage();
+                    JOptionPane.showMessageDialog(GenerateCodeIFrame.this, errorMsg, "连接数据库异常",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    // 关闭玻璃面板
+                    glassPanel.setVisible(false);
+                }
+            }
+        };
+        sWorker.execute();
     }
 
     /**
@@ -862,7 +887,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         }
 
         final String pattern2 = pattern;
-        glassPanel.setVisible(true);// 开启玻璃面板
+        // 开启玻璃面板
+        glassPanel.setVisible(true);
         MySwingWorker<List<TableEntity>> sWorker = new MySwingWorker<List<TableEntity>>() {
 
             @Override
@@ -958,6 +984,13 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         return ve;
     }
 
+    /**
+     * 创建Velocity上下文
+     * 
+     * @param tableEntity
+     * @param descFile
+     * @return
+     */
     private VelocityContext getVelocityContext(TableEntity tableEntity, File descFile) {
         VelocityContext context = new VelocityContext();
 
@@ -985,7 +1018,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         context.put("date2", date2);
 
         // 自定义的变量
-        // 如作者等
+        // 如作者、包名等
         Map<String, Object> varMap = getCustomVar();
         if (varMap != null) {
             for (Entry<String, Object> varEntry : varMap.entrySet()) {
@@ -1118,7 +1151,6 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         return map;
     }
 
-
     /**
      * 生成一个文件
      */
@@ -1132,15 +1164,16 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             return;
         }
 
-        // 重新设置tableEntity，去除掉其中被忽略的属性
         TableEntity tableEntity2;
+
         try {
             tableEntity2 = filterTableEntity(tableEntity);
         } catch (Exception e) {
-            log.error("对象属性过滤异常", e);
-            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性过滤异常", "错误", JOptionPane.ERROR_MESSAGE);
+            log.error("对象属性处理异常", e);
+            JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性处理异常", "错误", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         String fileNameT = txt_fileNameTemplate.getText();
         String fileName;
         // 计算文件名可能会出错
@@ -1203,17 +1236,30 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         }
     }
 
-    public TableEntity filterTableEntity(TableEntity input) throws Exception {
-        // 重新设置tableEntity，去除掉其中被忽略的属性
+    /**
+     * <pre>
+     * 处理表实体对象
+     * 1.去掉前缀
+     * 2.去掉忽略的属性
+     * </pre>
+     * 
+     * @param entity
+     * @return
+     * @throws Exception
+     */
+    private TableEntity filterTableEntity(TableEntity entity) throws Exception {
+        // 去掉表前缀
+        String tbPrefix = txt_rmTbPrefix.getText();
+        entity = GenerateHelp.removeTablePrefix(entity, tbPrefix);
+
+        // 去掉字段前缀
+        String fdPrefix = txt_rmFdPrefix.getText();
+        entity = GenerateHelp.removeTableColumnPrefix(entity, fdPrefix);
+
+        // 删除隐藏字段
         List<String> hideField = getHideField();
-        if (hideField != null) {
-            TableEntity tableEntity2 = input.clone();
-            for (String hf : hideField) {
-                tableEntity2.removeColumn(hf); // 移除属性
-            }
-            return tableEntity2;
-        }
-        return input;
+        return GenerateHelp.removeHiddenColumn(entity, hideField);
+
     }
 
     /**
@@ -1295,8 +1341,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
             try {
                 tableEntity2 = filterTableEntity(te);
             } catch (Exception e) {
-                log.error("对象属性过滤异常，表：" + te.getName(), e);
-                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性过滤异常，表：" + te.getName(), "错误",
+                log.error("对象属性处理异常，表：{}", te.getName(), e);
+                JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "对象属性处理异常，表：" + te.getName(), "错误",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }

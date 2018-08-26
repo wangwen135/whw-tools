@@ -11,7 +11,12 @@ import com.wwh.whwtools.generator.GenerateHelp;
  * @date 2015年8月17日 上午10:10:16
  *
  */
-public class ColumnEntity {
+public class ColumnEntity implements Cloneable {
+
+    /**
+     * 数字类型无符号标记
+     */
+    private static final String UNSIGNED_FLAG = " UNSIGNED";
 
     /**
      * 列名
@@ -82,6 +87,11 @@ public class ColumnEntity {
      * 自动增长
      */
     private boolean autoIncrement;
+
+    @Override
+    protected ColumnEntity clone() throws CloneNotSupportedException {
+        return (ColumnEntity) super.clone();
+    }
 
     /**
      * 获取测试值
@@ -177,10 +187,11 @@ public class ColumnEntity {
      * @return
      */
     public boolean hasDefaultValue() {
-        if (defaultValue == null || "".equals(defaultValue))
+        if (defaultValue == null || "".equals(defaultValue)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
     /**
@@ -202,7 +213,8 @@ public class ColumnEntity {
      *            the name to set
      */
     public void setName(String name) {
-        this.property = GenerateHelp.getPropertyByColumn(name);// 设置属性名称
+        // 设置属性名称
+        this.property = GenerateHelp.getPropertyByColumn(name);
         this.name = name;
     }
 
@@ -251,8 +263,8 @@ public class ColumnEntity {
      */
     public void setType(String type) {
         // 判断是否有 BIGINT
-        if (type.endsWith(" UNSIGNED")) {
-            this.type = type.substring(0, type.lastIndexOf(" UNSIGNED"));
+        if (type.endsWith(UNSIGNED_FLAG)) {
+            this.type = type.substring(0, type.lastIndexOf(UNSIGNED_FLAG));
             this.unsigned = true;
         } else {
             this.type = type;
