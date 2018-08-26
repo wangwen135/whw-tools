@@ -8,7 +8,7 @@
     
 
 
-[下载 WHWTools-0.0.1-SNAPSHOT-bin.tar.gz](https://github.com/wangwen135/resources/raw/master/WHWTools/release/WHWTools-0.0.1-SNAPSHOT-bin.tar.gz)
+[下载 WHWTools-0.0.2-SNAPSHOT-bin.tar.gz](https://github.com/wangwen135/resources/raw/master/WHWTools/release/WHWTools-0.0.2-SNAPSHOT-bin.tar.gz)
 ---
 
 ### 软件截图  
