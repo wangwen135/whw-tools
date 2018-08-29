@@ -913,7 +913,8 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
                     clearSelectTable();
                 } catch (Exception e1) {
                     log.error("获取数据库表信息异常", e1);
-                    JOptionPane.showMessageDialog(GenerateCodeIFrame.this, "获取数据库表信息异常", "错误",
+                    String errorMsg = e1.getCause() == null ? e1.getMessage() : e1.getCause().getMessage();
+                    JOptionPane.showMessageDialog(GenerateCodeIFrame.this, errorMsg, "获取数据库表信息异常",
                             JOptionPane.ERROR_MESSAGE);
                 } finally {
                     glassPanel.setVisible(false);// 关闭玻璃面板

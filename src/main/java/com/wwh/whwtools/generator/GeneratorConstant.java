@@ -76,10 +76,12 @@ public class GeneratorConstant {
         DB_TO_JAVA_MAPPING.put("BIT", "java.lang.Boolean");
         DB_TO_JAVA_MAPPING.put("FLOAT", "java.lang.Float");
         DB_TO_JAVA_MAPPING.put("DOUBLE", "java.lang.Double");
-        DB_TO_JAVA_MAPPING.put("BLOB", "java.lang.byte[]");
         DB_TO_JAVA_MAPPING.put("TEXT", "java.lang.String");
         DB_TO_JAVA_MAPPING.put("LONGTEXT", "java.lang.String");
         DB_TO_JAVA_MAPPING.put("MEDIUMTEXT", "java.lang.String");
+        DB_TO_JAVA_MAPPING.put("BLOB", "java.lang.byte[]");
+        DB_TO_JAVA_MAPPING.put("BINARY", "java.lang.byte[]");
+        DB_TO_JAVA_MAPPING.put("VARBINARY", "java.lang.byte[]");
     }
 
     /**
