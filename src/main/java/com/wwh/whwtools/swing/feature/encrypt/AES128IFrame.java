@@ -482,7 +482,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         }
 
         if (key == null) {
-            JOptionPane.showConfirmDialog(AES128IFrame.this, "密钥不能为空");
+            JOptionPane.showMessageDialog(AES128IFrame.this, "密钥不能为空");
             return;
         }
 
@@ -526,7 +526,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         }
 
         if (key == null) {
-            JOptionPane.showConfirmDialog(AES128IFrame.this, "密钥不能为空");
+            JOptionPane.showMessageDialog(AES128IFrame.this, "密钥不能为空");
             return;
         }
 

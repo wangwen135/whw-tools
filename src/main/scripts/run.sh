@@ -15,4 +15,4 @@ cd `dirname $0`
 ## 参数支持
 ## 设置了最大内存为1G
 
-java -Xmx1024m -cp ../config:../lib/* $@ com.wwh.whwtools.swing.frame.MainFrame
+java -Xmx1024m -cp ../config:../lib/* $@ com.wwh.whwtools.StartApp
