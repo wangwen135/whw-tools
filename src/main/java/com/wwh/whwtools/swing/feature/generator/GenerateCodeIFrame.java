@@ -999,11 +999,11 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
         context.put("table", tableEntity);
 
         // 日期工具
-        context.put("DateTool", new DateTool());
+        context.put("dateTool", new DateTool());
 
         context.put("strUtil", new StringUtils());
 
-        context.put("MyUtil", new MyUtils());
+        context.put("myUtil", new MyUtils());
 
         // 日期
         Date date = new Date();
@@ -1034,7 +1034,7 @@ public class GenerateCodeIFrame extends BaseJInternalFrame {
              * <pre>
              * ${fileNameAll}       可获取完整文件名<br>
              * ${fileName}           可获取文件名<br>
-             * #{fileNameSuffix}   获取文件后缀<br>
+             * ${fileNameSuffix}   获取文件后缀<br>
              * </pre>
              */
             String name = descFile.getName();
