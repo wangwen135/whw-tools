@@ -76,7 +76,7 @@ public class MainFrame extends JFrame {
 	private JDesktopPane desktopPane;
 	private JToolBar toolBar;
 	private JCheckBoxMenuItem cbmi_toolBar;
-	private JMenuBar menuBar_1;
+	private JMenuBar menuBar_top;
 
 	/**
 	 * Launch the application.
@@ -121,10 +121,10 @@ public class MainFrame extends JFrame {
 
 		contentPane.add(desktopPane, BorderLayout.CENTER);
 
-		menuBar_1 = new JMenuBar();
-		contentPane.add(menuBar_1, BorderLayout.NORTH);
+		menuBar_top = new JMenuBar();
+		contentPane.add(menuBar_top, BorderLayout.NORTH);
 
-		createMenu(menuBar_1);
+		createMenu(menuBar_top);
 
 		createToolBar();
 
@@ -150,7 +150,8 @@ public class MainFrame extends JFrame {
 		mn_start.add(mntm_close);
 
 		JMenuItem mntm_closeAll = new JMenuItem("全部关闭");
-		mntm_closeAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mntm_closeAll
+				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mntm_closeAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeAllIFrame();
@@ -216,16 +217,16 @@ public class MainFrame extends JFrame {
 		});
 		mn_cedec.add(mntmNativeascii);
 
-		JMenu mn_encrypt = new JMenu("加密");
-		menuBar.add(mn_encrypt);
+		JMenu mn_digest = new JMenu("摘要");
+		menuBar_top.add(mn_digest);
 
-		JMenuItem mntmMd_1 = new JMenuItem("MD5");
-		mntmMd_1.addActionListener(new ActionListener() {
+		JMenuItem mntmMd5 = new JMenuItem("MD5");
+		mntmMd5.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addInternalFrame(new MD5IFrame());
 			}
 		});
-		mn_encrypt.add(mntmMd_1);
+		mn_digest.add(mntmMd5);
 
 		JMenuItem mntmSha = new JMenuItem("SHA1");
 		mntmSha.addActionListener(new ActionListener() {
@@ -233,9 +234,10 @@ public class MainFrame extends JFrame {
 				addInternalFrame(new SHA1IFrame());
 			}
 		});
-		mn_encrypt.add(mntmSha);
-		// 添加横杠
-		mn_encrypt.insertSeparator(2);
+		mn_digest.add(mntmSha);
+
+		JMenu mn_encrypt = new JMenu("加密");
+		menuBar.add(mn_encrypt);
 
 		JMenuItem mntmDes = new JMenuItem("DES");
 		mn_encrypt.add(mntmDes);
@@ -248,8 +250,15 @@ public class MainFrame extends JFrame {
 		});
 		mn_encrypt.add(mntmAes);
 
+		// 添加横杠
+		mn_encrypt.insertSeparator(2);
+		
+		//RSA
+		JMenuItem mntmRsa = new JMenuItem("RSA");
+		mn_encrypt.add(mntmRsa);
+
 		JMenu mn_file = new JMenu("文件");
-		menuBar_1.add(mn_file);
+		menuBar_top.add(mn_file);
 
 		JMenuItem mntmReplace = new JMenuItem("替换");
 		mn_file.add(mntmReplace);
@@ -264,7 +273,7 @@ public class MainFrame extends JFrame {
 		mn_file.add(mntmAppend);
 
 		JMenu mnSocket = new JMenu("Socket");
-		menuBar_1.add(mnSocket);
+		menuBar_top.add(mnSocket);
 
 		JMenuItem mntmServer = new JMenuItem("Server");
 		mnSocket.add(mntmServer);
@@ -323,7 +332,8 @@ public class MainFrame extends JFrame {
 				tileWindow();
 			}
 		});
-		menuItem_tile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+		menuItem_tile.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
 		menu_4.add(menuItem_tile);
 
 		JMenuItem menuItem_cascade = new JMenuItem("层叠");
@@ -333,7 +343,8 @@ public class MainFrame extends JFrame {
 
 			}
 		});
-		menuItem_cascade.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+		menuItem_cascade.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
 		menu_4.add(menuItem_cascade);
 
 		JMenuItem menuItem_reset = new JMenuItem("还原窗口大小");
@@ -342,7 +353,8 @@ public class MainFrame extends JFrame {
 				resetWindowSize();
 			}
 		});
-		menuItem_reset.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+		menuItem_reset.setAccelerator(
+				KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
 		mn_view.add(menuItem_reset);
 
 		menuBar.add(mn_view);

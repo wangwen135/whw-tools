@@ -82,7 +82,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         setMaximizable(true);
         setIconifiable(true);
         setClosable(true);
-        setBounds(20, 20, 704, 485);
+        setBounds(20, 20, 750, 540);
         setPreferredSize(new Dimension(655, 485));
 
         ButtonGroup bg = new ButtonGroup();
@@ -96,7 +96,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         getContentPane().add(panel, BorderLayout.CENTER);
         GridBagLayout gbl_panel = new GridBagLayout();
         gbl_panel.columnWidths = new int[] { 100, 100, 100, 100, 100, 100, 105, 0 };
-        gbl_panel.rowHeights = new int[] { 23, 105, 23, 21, 21, 50, 23, 105, 0 };
+        gbl_panel.rowHeights = new int[] { 23, 105, 35, 21, 24, 55, 23, 105, 0 };
         gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
         gbl_panel.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
@@ -170,7 +170,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         txta_input = new JTextArea();
         scrollPane.setViewportView(txta_input);
 
-        JLabel label_1 = new JLabel("128位密钥：");
+        JLabel label_1 = new JLabel("128位(16字节)密钥：");
         GridBagConstraints gbc_label_1 = new GridBagConstraints();
         gbc_label_1.fill = GridBagConstraints.HORIZONTAL;
         gbc_label_1.insets = new Insets(0, 0, 5, 5);
@@ -253,7 +253,7 @@ public class AES128IFrame extends BaseJInternalFrame {
         gbc_label_3.gridy = 4;
         panel.add(label_3, gbc_label_3);
 
-        JButton btn_encode = new JButton("加密");
+        JButton btn_encode = new JButton(" 加    密 ");
         btn_encode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -271,7 +271,6 @@ public class AES128IFrame extends BaseJInternalFrame {
         gbc_cmbbx_fill.gridy = 4;
         panel.add(cmbbx_fill, gbc_cmbbx_fill);
         GridBagConstraints gbc_btn_encode = new GridBagConstraints();
-        gbc_btn_encode.fill = GridBagConstraints.HORIZONTAL;
         gbc_btn_encode.insets = new Insets(0, 0, 5, 5);
         gbc_btn_encode.gridx = 0;
         gbc_btn_encode.gridy = 5;
@@ -286,7 +285,7 @@ public class AES128IFrame extends BaseJInternalFrame {
             }
         });
 
-        JButton button = new JButton("解密");
+        JButton button = new JButton("解    密");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // 解密
