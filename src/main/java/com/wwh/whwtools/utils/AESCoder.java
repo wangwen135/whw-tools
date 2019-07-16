@@ -85,12 +85,11 @@ public class AESCoder {
     /**
      * <pre>
      * 根据密码获取密钥
-     * 通过对密码进行MD5 得到16个byte
-     * 使用UTF-8 编码将字符串转成byte[]
+     * 使用UTF-8 编码将password串转成byte[]
+     * 再进行MD5 得到16个byte
      * </pre>
      * 
-     * @param password
-     *            密码
+     * @param password 密码
      * @return 16个byte 128位的密钥
      * @throws Exception
      */
@@ -101,8 +100,7 @@ public class AESCoder {
     /**
      * 根据种子获取随机密钥
      * 
-     * @param seed
-     *            种子
+     * @param seed 种子
      * @return 128位的密钥
      * @throws Exception
      */
@@ -118,8 +116,7 @@ public class AESCoder {
     /**
      * 根据种子获得一个随机密钥生成器
      * 
-     * @param seed
-     *            种子
+     * @param seed 种子
      * @return 随机密钥生成器
      * @throws NoSuchAlgorithmException
      */
@@ -155,8 +152,7 @@ public class AESCoder {
     /**
      * 根据给定的字节数组构造一个AES密钥
      *
-     * @param key
-     *            密钥的密钥内容，复制该数组的内容来防止后续修改
+     * @param key 密钥的密钥内容，复制该数组的内容来防止后续修改
      * @return 密钥
      */
     public static Key getSecretKeySpec(byte[] key) {
@@ -166,10 +162,8 @@ public class AESCoder {
     /**
      * 加密
      *
-     * @param data
-     *            待加密数据
-     * @param key
-     *            密钥对象
+     * @param data 待加密数据
+     * @param key  密钥对象
      * @return byte[] 加密数据
      * @throws Exception
      */
@@ -180,10 +174,8 @@ public class AESCoder {
     /**
      * 加密
      *
-     * @param data
-     *            待加密数据
-     * @param key
-     *            二进制密钥
+     * @param data 待加密数据
+     * @param key  二进制密钥
      * @return byte[] 加密数据
      * @throws Exception
      */
@@ -194,12 +186,9 @@ public class AESCoder {
     /**
      * 加密
      *
-     * @param data
-     *            待加密数据
-     * @param key
-     *            二进制密钥
-     * @param cipherAlgorithm
-     *            加密算法/工作模式/填充方式
+     * @param data            待加密数据
+     * @param key             二进制密钥
+     * @param cipherAlgorithm 加密算法/工作模式/填充方式
      * @return byte[] 加密数据
      * @throws Exception
      */
@@ -212,12 +201,9 @@ public class AESCoder {
     /**
      * 加密
      *
-     * @param data
-     *            待加密数据
-     * @param key
-     *            密钥对象
-     * @param cipherAlgorithm
-     *            加密算法/工作模式/填充方式
+     * @param data            待加密数据
+     * @param key             密钥对象
+     * @param cipherAlgorithm 加密算法/工作模式/填充方式
      * @return byte[] 加密数据
      * @throws Exception
      */
@@ -233,10 +219,8 @@ public class AESCoder {
     /**
      * 解密
      *
-     * @param data
-     *            待解密数据
-     * @param key
-     *            二进制密钥
+     * @param data 待解密数据
+     * @param key  二进制密钥
      * @return byte[] 解密数据
      * @throws Exception
      */
@@ -247,10 +231,8 @@ public class AESCoder {
     /**
      * 解密
      *
-     * @param data
-     *            待解密数据
-     * @param key
-     *            密钥对象
+     * @param data 待解密数据
+     * @param key  密钥对象
      * @return byte[] 解密数据
      * @throws Exception
      */
@@ -261,12 +243,9 @@ public class AESCoder {
     /**
      * 解密
      *
-     * @param data
-     *            待解密数据
-     * @param key
-     *            二进制密钥
-     * @param cipherAlgorithm
-     *            加密算法/工作模式/填充方式
+     * @param data            待解密数据
+     * @param key             二进制密钥
+     * @param cipherAlgorithm 加密算法/工作模式/填充方式
      * @return byte[] 解密数据
      * @throws Exception
      */
@@ -279,12 +258,9 @@ public class AESCoder {
     /**
      * 解密
      *
-     * @param data
-     *            待解密数据
-     * @param key
-     *            密钥
-     * @param cipherAlgorithm
-     *            加密算法/工作模式/填充方式
+     * @param data            待解密数据
+     * @param key             密钥
+     * @param cipherAlgorithm 加密算法/工作模式/填充方式
      * @return byte[] 解密数据
      * @throws Exception
      */
