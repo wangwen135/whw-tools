@@ -2,6 +2,9 @@ package com.wwh.whwtools.swing.feature.codec;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,18 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.wwh.whwtools.swing.frame.BaseJInternalFrame;
 import com.wwh.whwtools.utils.CodecUtils;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.border.EmptyBorder;
 
 /**
  * <pre>
@@ -60,9 +58,9 @@ public class Base64IFrame extends BaseJInternalFrame {
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(panel, BorderLayout.CENTER);
         GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 100, 100, 205, 100, 0 };
+        gbl_panel.columnWidths = new int[] { 100, 100, 170, 50, 100, 0 };
         gbl_panel.rowHeights = new int[] { 30, 105, 25, 25, 105, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+        gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
         gbl_panel.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
         panel.setLayout(gbl_panel);
 
@@ -83,7 +81,7 @@ public class Base64IFrame extends BaseJInternalFrame {
         gbc_label.gridy = 0;
         panel.add(label, gbc_label);
 
-        JButton btn_encode = new JButton("编码");
+        JButton btn_encode = new JButton("编  码");
         btn_encode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String inputText = txta_input.getText();
@@ -106,16 +104,34 @@ public class Base64IFrame extends BaseJInternalFrame {
         cmbbx_charset.setEditable(true);
         GridBagConstraints gbc_cmbbx_charset = new GridBagConstraints();
         gbc_cmbbx_charset.fill = GridBagConstraints.HORIZONTAL;
-        gbc_cmbbx_charset.insets = new Insets(0, 0, 5, 0);
+        gbc_cmbbx_charset.insets = new Insets(0, 0, 5, 5);
         gbc_cmbbx_charset.gridx = 3;
         gbc_cmbbx_charset.gridy = 0;
         panel.add(cmbbx_charset, gbc_cmbbx_charset);
+
+        JButton btnBase = new JButton("?");
+        btnBase.setToolTipText("Base64说明");
+        btnBase.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showInternalMessageDialog(Base64IFrame.this,
+                        "Base64 把每三个8Bit的字节 转换为 四个6Bit的字节（3*8 = 4*6 = 24），\n" + "然后把6Bit再添两位高位0，组成四个8Bit的字节，\n"
+                                + "也就是说，转换后的字符串理论上将要比原来的长1/3。\n" + "6Bit刚好又64种组合（2^6=64），用64个字符表示即可，\n"
+                                + "Base64码表包括 [A-Za-z0-9+/]，工64个字符，\n" + "当最后不足3字节时，1变2，2变3；不够的位数用0补全，再用=号补满4个字节",
+                        "Base64说明", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        GridBagConstraints gbc_btnBase = new GridBagConstraints();
+        gbc_btnBase.anchor = GridBagConstraints.EAST;
+        gbc_btnBase.insets = new Insets(0, 0, 5, 0);
+        gbc_btnBase.gridx = 4;
+        gbc_btnBase.gridy = 0;
+        panel.add(btnBase, gbc_btnBase);
 
         JScrollPane scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
         gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-        gbc_scrollPane.gridwidth = 4;
+        gbc_scrollPane.gridwidth = 5;
         gbc_scrollPane.gridx = 0;
         gbc_scrollPane.gridy = 1;
         panel.add(scrollPane, gbc_scrollPane);
@@ -139,7 +155,7 @@ public class Base64IFrame extends BaseJInternalFrame {
             }
         });
 
-        JButton btn_decode = new JButton("解码");
+        JButton btn_decode = new JButton("解  码");
         btn_decode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -184,7 +200,7 @@ public class Base64IFrame extends BaseJInternalFrame {
         gbc_btn_exchange.fill = GridBagConstraints.HORIZONTAL;
         gbc_btn_exchange.anchor = GridBagConstraints.NORTH;
         gbc_btn_exchange.insets = new Insets(0, 0, 5, 0);
-        gbc_btn_exchange.gridx = 3;
+        gbc_btn_exchange.gridx = 4;
         gbc_btn_exchange.gridy = 2;
         panel.add(btn_exchange, gbc_btn_exchange);
 
@@ -200,7 +216,7 @@ public class Base64IFrame extends BaseJInternalFrame {
         JScrollPane scrollPane_1 = new JScrollPane();
         GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
         gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-        gbc_scrollPane_1.gridwidth = 4;
+        gbc_scrollPane_1.gridwidth = 5;
         gbc_scrollPane_1.gridx = 0;
         gbc_scrollPane_1.gridy = 4;
         panel.add(scrollPane_1, gbc_scrollPane_1);
