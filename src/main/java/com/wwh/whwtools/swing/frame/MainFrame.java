@@ -39,6 +39,7 @@ import com.wwh.whwtools.swing.feature.digest.MD5IFrame;
 import com.wwh.whwtools.swing.feature.digest.SHA1IFrame;
 import com.wwh.whwtools.swing.feature.encrypt.AES128IFrame;
 import com.wwh.whwtools.swing.feature.encrypt.DESIFrame;
+import com.wwh.whwtools.swing.feature.encrypt.RSAIFrame;
 import com.wwh.whwtools.swing.feature.file.FileAppendIFrame;
 import com.wwh.whwtools.swing.feature.generator.GenerateCodeIFrame;
 
@@ -108,7 +109,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setTitle("工具");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/image/et.ico")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(MainFrame.class.getResource("/image/icon.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 1020, 740);
         setLocationRelativeTo(null);
@@ -261,6 +262,12 @@ public class MainFrame extends JFrame {
 
         // RSA
         JMenuItem mntmRsa = new JMenuItem("RSA");
+        mntmRsa.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addInternalFrame(new RSAIFrame());
+            }
+        });
         mn_encrypt.add(mntmRsa);
 
         JMenu mn_file = new JMenu("文件");

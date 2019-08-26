@@ -24,7 +24,7 @@
 
 		<maven_test_skip>true</maven_test_skip>
 
-		<jdk_version>1.7</jdk_version>
+		<jdk_version>1.8</jdk_version>
 
 		<file_encoding>UTF-8</file_encoding>
 
